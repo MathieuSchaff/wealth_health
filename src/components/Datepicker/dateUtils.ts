@@ -108,7 +108,7 @@ export const createArrayAfterFromLengthMonth = (
   const nextDaysFormated = nextDays.map((day) => {
     return { day: day, month: month, year: year };
   });
-  console.log("nextDaysFormated", nextDaysFormated);
+  // console.log("nextDaysFormated", nextDaysFormated);
   return nextDaysFormated;
 };
 export const createArrayBeforeFromLengthMonth = (

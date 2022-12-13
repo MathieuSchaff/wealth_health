@@ -1,4 +1,4 @@
-import React, { useCallback, useMemo, useState } from "react";
+import React, { useCallback, useMemo, useRef, useState } from "react";
 import { PickerWrapper } from "./styled";
 import { Header } from "./styled";
 import { SevenColGrid } from "./styled";
@@ -14,6 +14,7 @@ import { abbrMonthsNames } from "./dateUtils";
 import { abbrWeekdayNames } from "./dateUtils";
 import uuid from "react-uuid";
 import ButtonDay from "./ButtonDay";
+import CustomSelect from "./CustomSelect";
 import {
   createArrayFromLengthMonth,
   getFirstDayOfTheMonth,
@@ -38,7 +39,7 @@ const DatePicker = ({
   const [currentYear, setCurrentYaer] = useState<number>(
     new Date().getFullYear()
   );
-
+  const containerRef = useRef<HTMLDivElement>(null);
   const [selectedDate, setSelectedDate] = useState<Date>(new Date());
   const nextMonth = useCallback(() => {
     if (currentMonth < 11) {
@@ -75,10 +76,10 @@ const DatePicker = ({
    * @returns
    */
   const getTimeFromState = (_day: number) => {
-    console.log(
-      "getTimeFromState",
-      new Date(currentYear, currentMonth, _day).getTime()
-    );
+    // console.log(
+    //   "getTimeFromState",
+    //   new Date(currentYear, currentMonth, _day).getTime()
+    // );
     return new Date(currentYear, currentMonth, _day).getTime();
   };
   const firstDayOfMonth = useMemo(
@@ -96,9 +97,13 @@ const DatePicker = ({
     currentMonth,
     previousDays.length + days.length
   );
-  console.log("LENGTH", previousDays.length + days.length);
+  // console.log("LENGTH", previousDays.length + days.length);
+  console.log(
+    selectedDate.getTime() === new Date(currentYear, currentMonth, 0).getTime()
+  );
+
   return (
-    <div>
+    <div ref={containerRef}>
       <input type="text" />
       <PickerWrapper>
         <Header>
@@ -122,8 +127,9 @@ const DatePicker = ({
           >
             <BsChevronLeft />
           </button>
-          <p>{abbrMonthsNames[currentMonth]}</p>
-          <p>{currentYear}</p>
+          <CustomSelect current={abbrMonthsNames[currentMonth]} type="month" />
+          <CustomSelect current={currentYear} type="year" />
+
           <button
             onClick={nextMonth}
             disabled={

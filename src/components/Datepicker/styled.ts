@@ -16,9 +16,6 @@ export const Header = styled.header`
     display: block;
     cursor: pointer;
   }
-  p {
-    flex: 1 0 0;
-  }
 `;
 export const SevenColGrid = styled.div`
   display: grid;
@@ -37,6 +34,14 @@ export const SevenColGrid = styled.div`
   .active {
     background-color: teal;
   }
+`;
+export const StyledCustomSelectContainer = styled.div`
+  flex: 1 0 0;
+  position: relative;
+`;
+export const StyledCustomSelect = styled.select`
+  position: absolute;
+  width: 100%;
 `;
 /* ${({ fwbold }) =>
     fwbold &&
