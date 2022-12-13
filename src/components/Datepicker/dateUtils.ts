@@ -82,44 +82,83 @@ export const createArrayFromLengthMonth = (
   year: number,
   month: number
 ): Array<number> => {
-  const firstDayOfMonth = getFirstDayOfTheMonth(year, month);
   // les jours futurs comment toujours par 1 et le nombre total de chiffre doit etre égal à 42
 
   // const futureDays = range(1, 42 - )
   const numberofDaysInMonth = getNumberofDaysInMonth(year, month);
   const rangeOfMyMonth = range(1, numberofDaysInMonth + 1);
 
-  if (firstDayOfMonth !== 0) {
-    console.log("enter firstDayOfMonth");
-    const numberofDaysInPrevMonth = getNumberofDaysInMonth(year, month - 1);
-    // par exemple 30
-    // creer une array qui aura les dates manquantes en partant de 30
-    // et en enlevant- firstDayOfMonth ( l'index du premier jour du mois)
-    // donc allant de 26 a 30
-    // a partir de ça, je veux creer une array qui aura ces trois chiffres.
-
-    const pastDays = range(
-      numberofDaysInPrevMonth + 1 - firstDayOfMonth,
-      numberofDaysInPrevMonth + 1
-    );
-    const pastAndNowDays = [...pastDays, ...rangeOfMyMonth];
-
-    return pastAndNowDays;
-  }
   return rangeOfMyMonth;
 };
+export const createArrayAfterFromLengthMonth = (
+  year: number,
+  month: number,
+  length: number
+): Array<{ day: number; month: number; year: number }> => {
+  if (month < 11) {
+    month += 1;
+  } else {
+    month = 0;
+    year += 1;
+  }
 
-export const range = (start: number, end: number) => {
+  // const numberofDaysInNextMonth = getNumberofDaysInMonth(year, month);
+  const nextDays = range(1, NUMBER_OF_CELLS - length + 1);
+  // console.log("nextDays", nextDays);
+  const nextDaysFormated = nextDays.map((day) => {
+    return { day: day, month: month, year: year };
+  });
+  console.log("nextDaysFormated", nextDaysFormated);
+  return nextDaysFormated;
+};
+export const createArrayBeforeFromLengthMonth = (
+  year: number,
+  month: number,
+  firstDayOfMonth: number
+): Array<{ day: number; month: number; year: number }> => {
+  if (month > 0) {
+    month -= 1;
+  } else {
+    year = 1;
+    month = 11;
+  }
+  // console.log("year month before", year, month);
+  // par exemple 30
+  // creer une array qui aura les dates manquantes en partant de 30
+  // et en enlevant- firstDayOfMonth ( l'index du premier jour du mois)
+  // donc allant de 26 a 30
+  // a partir de ça, je veux creer une array qui aura ces trois chiffres.
+
+  // console.log("enter firstDayOfMonth");
+  const numberofDaysInPrevMonth = getNumberofDaysInMonth(year, month);
+  // console.log("numberofDaysInPrevMonth", numberofDaysInPrevMonth);
+  const pastDays = range(
+    numberofDaysInPrevMonth + 1 - firstDayOfMonth,
+    numberofDaysInPrevMonth + 1
+  );
+  // quel format a renvoyé pour que je puisse avoir les valeurs des jours ( 28 /29 etc)
+  // et avoir aussi le mois et l'année si nécessaire pour pouvoir avoir un onClick dynamique
+  // ce sera une array renvoyé obligatoirement
+  // cette array aura un objet pour chaque jour
+  // ex
+  // [
+  //   {day: day, month: month, year: year}
+  // ]
+  const pastDaysFormated = pastDays.map((day) => {
+    return { day: day, month: month, year: year };
+  });
+  // console.log("pastDaysFormated", pastDaysFormated);
+  return pastDaysFormated;
+};
+/**
+ * Take a start and an end and return an array of number ( equivalent to date)
+ * @param start
+ * @param end
+ * @returns
+ */
+export const range = (start: number, end: number): Array<number> => {
   const result = Array.from(Array(end - start).keys()).map(
     (x: number) => x + start
   );
   return result;
 };
-
-// export const range = (start: number, end: number) => {
-
-//   const result = Array.from(Array(numberofDaysInMonth).keys()).map(
-//     (x: number) => x + 1
-//   );
-// return result;
-// };

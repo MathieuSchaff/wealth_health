@@ -4,7 +4,10 @@ import "./App.css";
 function App() {
   return (
     <div className="App">
-      <MyDatePicker1 color="blue" color2="red" />
+      <MyDatePicker1
+        minDate={new Date(2022, 7, 22)}
+        maxDate={new Date(2023, 2, 22)}
+      />
     </div>
   );
 }
