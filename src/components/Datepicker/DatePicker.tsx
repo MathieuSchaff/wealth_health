@@ -8,15 +8,11 @@ import React, {
 import { PickerWrapper } from "./styled";
 import { Header } from "./styled";
 import { SevenColGrid } from "./styled";
-// BsChevronLeft;
-// BsChevronRight;
-// BsChevronDoubleLeft;
-// BsChevronDoubleRight;
+
 import { BsChevronDoubleRight } from "react-icons/bs";
 import { BsChevronDoubleLeft } from "react-icons/bs";
 import { BsChevronRight } from "react-icons/bs";
 import { BsChevronLeft } from "react-icons/bs";
-import { abbrMonthsNames } from "./dateUtils";
 import { abbrWeekdayNames } from "./dateUtils";
 import uuid from "react-uuid";
 import ButtonDay from "./ButtonDay";
@@ -46,7 +42,7 @@ const DatePicker = ({
     if (containerRef) {
       setHeight(containerRef?.current?.clientHeight as number);
     }
-  });
+  }, []);
   const [currentMonth, setCurrentMonth] = useState<number>(
     new Date().getMonth()
   );
@@ -110,14 +106,13 @@ const DatePicker = ({
     currentMonth,
     previousDays.length + days.length
   );
-  // console.log("LENGTH", previousDays.length + days.length);
-  // console.log(
-  //   selectedDate.getTime() === new Date(currentYear, currentMonth, 0).getTime()
-  // );
-  console.log(height);
 
   return (
     <div>
+      <div>
+        {selectedDate.getFullYear()}, {selectedDate.getMonth()},{" "}
+        {selectedDate.getDay()}
+      </div>
       <input type="text" />
       <PickerWrapper ref={containerRef}>
         <Header>
@@ -142,14 +137,22 @@ const DatePicker = ({
             <BsChevronLeft />
           </button>
           <CustomSelect
-            current={abbrMonthsNames[currentMonth]}
+            currentMonths={currentMonth}
+            currentYaer={currentYear}
             type="month"
+            setCurrent={setCurrentMonth}
             heightContainer={height}
+            minDate={minDate}
+            maxDate={maxDate}
           />
           <CustomSelect
-            current={currentYear}
+            currentMonths={currentMonth}
+            currentYaer={currentYear}
             type="year"
+            setCurrent={setCurrentYaer}
             heightContainer={height}
+            minDate={minDate}
+            maxDate={maxDate}
           />
 
           <button

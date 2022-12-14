@@ -51,23 +51,23 @@ export const StyledCustomSelect = styled.div`
   background-color: black;
   color: teal;
 `;
-/* ${({ fwbold }) =>
-    fwbold &&
-    css`
-      font-weight: bold;
-    `} */
-// const DatePicker = ({ selectedDate, onDateChange }) => {
-//   // component implementation goes here
+
+// /* width */
+// ::-webkit-scrollbar {
+//   width: 10px;
 // }
 
-// DatePicker.propTypes = {
-//   selectedDate: PropTypes.instanceOf(Date),
-//   onDateChange: PropTypes.func.isRequired,
-// };
+// /* Track */
+// ::-webkit-scrollbar-track {
+//   background: #f1f1f1;
+// }
 
-// DatePicker.defaultProps = {
-//   selectedDate: new Date(),
-// };
+// /* Handle */
+// ::-webkit-scrollbar-thumb {
+//   background: #888;
+// }
 
-// color: ${(props) => props.color2 || "palevioletred"}!important;
-// color: ${(props) => props.colorInput || "palevioletred"};
+// /* Handle on hover */
+// ::-webkit-scrollbar-thumb:hover {
+//   background: #555;
+// }
