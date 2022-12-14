@@ -39,9 +39,17 @@ export const StyledCustomSelectContainer = styled.div`
   flex: 1 0 0;
   position: relative;
 `;
-export const StyledCustomSelect = styled.select`
+export const StyledCustomSelect = styled.div`
   position: absolute;
-  width: 100%;
+  top: 0;
+  width: 50%;
+  transform: translate(50%);
+  height: ${(props) => props.heightContainer}px;
+  overflow: scroll;
+  overflow-x: hidden;
+  z-index: 10;
+  background-color: black;
+  color: teal;
 `;
 /* ${({ fwbold }) =>
     fwbold &&

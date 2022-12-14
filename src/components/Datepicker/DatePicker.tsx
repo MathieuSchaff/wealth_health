@@ -1,4 +1,10 @@
-import React, { useCallback, useMemo, useRef, useState } from "react";
+import React, {
+  useCallback,
+  useLayoutEffect,
+  useMemo,
+  useRef,
+  useState,
+} from "react";
 import { PickerWrapper } from "./styled";
 import { Header } from "./styled";
 import { SevenColGrid } from "./styled";
@@ -33,13 +39,20 @@ const DatePicker = ({
   minDate?: Date;
   maxDate?: Date;
 }) => {
+  const [height, setHeight] = useState<number>(0);
+  const containerRef = useRef<HTMLDivElement>(null);
+
+  useLayoutEffect(() => {
+    if (containerRef) {
+      setHeight(containerRef?.current?.clientHeight as number);
+    }
+  });
   const [currentMonth, setCurrentMonth] = useState<number>(
     new Date().getMonth()
   );
   const [currentYear, setCurrentYaer] = useState<number>(
     new Date().getFullYear()
   );
-  const containerRef = useRef<HTMLDivElement>(null);
   const [selectedDate, setSelectedDate] = useState<Date>(new Date());
   const nextMonth = useCallback(() => {
     if (currentMonth < 11) {
@@ -98,14 +111,15 @@ const DatePicker = ({
     previousDays.length + days.length
   );
   // console.log("LENGTH", previousDays.length + days.length);
-  console.log(
-    selectedDate.getTime() === new Date(currentYear, currentMonth, 0).getTime()
-  );
+  // console.log(
+  //   selectedDate.getTime() === new Date(currentYear, currentMonth, 0).getTime()
+  // );
+  console.log(height);
 
   return (
-    <div ref={containerRef}>
+    <div>
       <input type="text" />
-      <PickerWrapper>
+      <PickerWrapper ref={containerRef}>
         <Header>
           <button
             onClick={prevYear}
@@ -127,8 +141,16 @@ const DatePicker = ({
           >
             <BsChevronLeft />
           </button>
-          <CustomSelect current={abbrMonthsNames[currentMonth]} type="month" />
-          <CustomSelect current={currentYear} type="year" />
+          <CustomSelect
+            current={abbrMonthsNames[currentMonth]}
+            type="month"
+            heightContainer={height}
+          />
+          <CustomSelect
+            current={currentYear}
+            type="year"
+            heightContainer={height}
+          />
 
           <button
             onClick={nextMonth}

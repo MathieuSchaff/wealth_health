@@ -5,7 +5,9 @@ import uuid from "react-uuid";
 const CustomSelect = ({
   current,
   type,
+  heightContainer,
 }: {
+  heightContainer: number;
   current: string | number;
   type: string;
 }) => {
@@ -38,7 +40,11 @@ const CustomSelect = ({
   return (
     <StyledCustomSelectContainer>
       <p onClick={() => toggleOpen()}>{current}</p>
-      {isOpen && <StyledCustomSelect>{content}</StyledCustomSelect>}
+      {isOpen && (
+        <StyledCustomSelect heightContainer={heightContainer}>
+          <div>{content}</div>
+        </StyledCustomSelect>
+      )}
     </StyledCustomSelectContainer>
   );
 };
