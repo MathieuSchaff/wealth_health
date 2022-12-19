@@ -1,55 +1,67 @@
-import React, {
-  useCallback,
-  useLayoutEffect,
-  useMemo,
-  useRef,
-  useState,
-} from "react";
-import { PickerWrapper } from "./styled";
+import { useCallback, useLayoutEffect, useMemo, useRef, useState } from "react";
+import { DayName, PickerWrapper } from "./styled";
 import { Header } from "./styled";
-import { SevenColGrid } from "./styled";
+import { SevenColGrid, DatePickerWrapper } from "./styled";
 
-import { BsChevronDoubleRight } from "react-icons/bs";
-import { BsChevronDoubleLeft } from "react-icons/bs";
-import { BsChevronRight } from "react-icons/bs";
-import { BsChevronLeft } from "react-icons/bs";
 import { abbrWeekdayNames } from "./dateUtils";
 import uuid from "react-uuid";
 import ButtonDay from "./ButtonDay";
-import CustomSelect from "./CustomSelect";
+import CustomSelect from "./CusTomSelect/CustomSelect";
 import {
   createArrayFromLengthMonth,
   getFirstDayOfTheMonth,
   createArrayAfterFromLengthMonth,
-  getNumberofDaysInMonth,
   createArrayBeforeFromLengthMonth,
 } from "./dateUtils";
+import {
+  NavButton,
+  SvgButtonRightYear,
+  SvgButtonRightMonth,
+  SvgButtonLeftYear,
+  SvgButtonLeftMonth,
+} from "./styled";
+
+export interface IButtonProps {
+  onClick?: () => void;
+  disabled?: boolean;
+  primarycolor?: string;
+  secondarycolor?: string;
+}
 const DatePicker = ({
+  id,
   minDate,
   maxDate,
-  color,
-  color2,
+  primarycolor,
+  secondarycolor,
+  tertiarycolor,
+  onChange,
+  selected,
 }: {
-  color?: string;
-  color2?: string;
+  id: string;
+  primarycolor?: string;
+  secondarycolor?: string;
+  tertiarycolor?: string;
   minDate?: Date;
   maxDate?: Date;
+  selected: Date;
+  onChange: (date: Date) => void;
 }) => {
+  const [isOpen, setIsOpen] = useState<boolean>(false);
   const [height, setHeight] = useState<number>(0);
   const containerRef = useRef<HTMLDivElement>(null);
-
+  // allow to set the height of the container ( useful to render a children height un the CustomSelect component)
   useLayoutEffect(() => {
     if (containerRef) {
       setHeight(containerRef?.current?.clientHeight as number);
     }
-  }, []);
+  }, [isOpen]);
   const [currentMonth, setCurrentMonth] = useState<number>(
     new Date().getMonth()
   );
   const [currentYear, setCurrentYaer] = useState<number>(
     new Date().getFullYear()
   );
-  const [selectedDate, setSelectedDate] = useState<Date>(new Date());
+
   const nextMonth = useCallback(() => {
     if (currentMonth < 11) {
       setCurrentMonth((old) => old + 1);
@@ -73,9 +85,13 @@ const DatePicker = ({
   const prevYear = useCallback(() => {
     setCurrentYaer((old) => old - 1);
   }, []);
+
+  // set the selected date
   const handleSelection = (year: number, month: number, day: number): void => {
-    setSelectedDate(new Date(year, month, day));
-    console.log("handleSelection", year, month, day);
+    console.log("ENTER HANDLE selection");
+
+    onChange(new Date(year, month, day));
+    setIsOpen(false);
   };
   /**
    *  For this function we want:
@@ -95,189 +111,200 @@ const DatePicker = ({
     () => getFirstDayOfTheMonth(currentYear, currentMonth),
     [currentMonth, currentYear]
   );
+
+  // get the days of the current month
   const days = createArrayFromLengthMonth(currentYear, currentMonth);
+
+  // get the days of the previous month
   const previousDays = createArrayBeforeFromLengthMonth(
     currentYear,
     currentMonth,
     firstDayOfMonth
   );
+
+  // get the days of the next month
   const nextDays = createArrayAfterFromLengthMonth(
     currentYear,
     currentMonth,
     previousDays.length + days.length
   );
-
+  const handleInputChange = (e: { target: { value: any } }) => {
+    console.log("ENTER HANDLE INPUT CHANGE");
+    onChange(e.target.value);
+  };
+  const handleKeyDown = (event: React.KeyboardEvent<HTMLInputElement>) => {
+    console.log("enter keydown");
+    if (event.code === "Enter") {
+      if (!(selected instanceof Date) && new Date(selected).getTime())
+        console.log("enter keydown ENTER problem");
+    }
+  };
   return (
-    <div>
-      <div>
-        {selectedDate.getFullYear()}, {selectedDate.getMonth()},{" "}
-        {selectedDate.getDay()}
-      </div>
-      <input type="text" />
-      <PickerWrapper ref={containerRef}>
-        <Header>
-          <button
-            onClick={prevYear}
-            disabled={
-              minDate !== undefined
-                ? minDate?.getTime() > getTimeFromState(1)
-                : false
-            }
-          >
-            <BsChevronDoubleLeft />
-          </button>
-          <button
-            onClick={prevMonth}
-            disabled={
-              minDate !== undefined
-                ? minDate?.getTime() > getTimeFromState(1)
-                : false
-            }
-          >
-            <BsChevronLeft />
-          </button>
-          <CustomSelect
-            currentMonths={currentMonth}
-            currentYaer={currentYear}
-            type="month"
-            setCurrent={setCurrentMonth}
-            heightContainer={height}
-            minDate={minDate}
-            maxDate={maxDate}
-          />
-          <CustomSelect
-            currentMonths={currentMonth}
-            currentYaer={currentYear}
-            type="year"
-            setCurrent={setCurrentYaer}
-            heightContainer={height}
-            minDate={minDate}
-            maxDate={maxDate}
-          />
+    <DatePickerWrapper>
+      <>
+        {/* <label htmlFor={id}>Start date</label> */}
 
-          <button
-            onClick={nextMonth}
-            disabled={
-              maxDate !== undefined
-                ? maxDate?.getTime() < getTimeFromState(1)
-                : false
-            }
-          >
-            <BsChevronRight />
-          </button>
-          <button
-            onClick={nextYear}
-            disabled={
-              maxDate !== undefined
-                ? maxDate?.getTime() < getTimeFromState(1)
-                : false
-            }
-          >
-            <BsChevronDoubleRight />
-          </button>
-        </Header>
-        <div>
-          <SevenColGrid>
-            {abbrWeekdayNames.map((day, i) => (
-              <span key={i}>{day}</span>
-            ))}
-          </SevenColGrid>
-          <SevenColGrid>
-            {firstDayOfMonth !== 0
-              ? previousDays.map((dayObj) => {
-                  return (
-                    <ButtonDay
-                      key={uuid()}
-                      handleSelection={() =>
-                        handleSelection(dayObj.year, dayObj.month, dayObj.day)
-                      }
-                      className={
-                        selectedDate.getTime() ===
-                        new Date(
-                          currentYear,
-                          currentMonth,
-                          dayObj.day
-                        ).getTime()
-                          ? "active"
-                          : ""
-                      }
-                    >
-                      {dayObj.day}
-                    </ButtonDay>
-                  );
-                })
-              : null}
-            {days.map((day) => {
-              return (
-                <ButtonDay
-                  key={uuid()}
-                  handleSelection={() =>
-                    handleSelection(currentYear, currentMonth, day)
-                  }
-                  className={
-                    selectedDate.getTime() ===
-                    new Date(currentYear, currentMonth, day).getTime()
-                      ? "active"
-                      : ""
-                  }
-                >
-                  {day}
-                </ButtonDay>
-              );
-            })}
-            {previousDays.length + days.length < 42
-              ? nextDays.map((dayObj) => {
-                  return (
-                    <ButtonDay
-                      key={uuid()}
-                      handleSelection={() =>
-                        handleSelection(dayObj.year, dayObj.month, dayObj.day)
-                      }
-                      className={
-                        selectedDate.getTime() ===
-                        new Date(
-                          currentYear,
-                          currentMonth,
-                          dayObj.day
-                        ).getTime()
-                          ? "active"
-                          : ""
-                      }
-                    >
-                      {dayObj.day}
-                    </ButtonDay>
-                  );
-                })
-              : null}
-          </SevenColGrid>
-        </div>
-      </PickerWrapper>
-    </div>
+        <input
+          type="text"
+          // id={id}
+          // value={
+
+          defaultValue={selected.toLocaleDateString() || selected}
+          onFocus={() => setIsOpen(true)}
+          onChange={handleInputChange}
+          onKeyDown={handleKeyDown}
+        />
+      </>
+      {isOpen && (
+        <PickerWrapper ref={containerRef} primarycolor={primarycolor}>
+          <Header>
+            <NavButton
+              onClick={prevYear}
+              disabled={
+                minDate !== undefined
+                  ? minDate?.getTime() > getTimeFromState(1)
+                  : false
+              }
+              primarycolor={primarycolor}
+              secondarycolor={secondarycolor}
+            >
+              <SvgButtonLeftYear
+                primarycolor={primarycolor}
+                secondarycolor={secondarycolor}
+              />
+            </NavButton>
+            <NavButton
+              onClick={prevMonth}
+              disabled={
+                minDate !== undefined
+                  ? minDate?.getTime() > getTimeFromState(1)
+                  : false
+              }
+              primarycolor={primarycolor}
+              secondarycolor={secondarycolor}
+            >
+              <SvgButtonLeftMonth
+                primarycolor={primarycolor}
+                secondarycolor={secondarycolor}
+              />
+            </NavButton>
+            <CustomSelect
+              currentMonths={currentMonth}
+              currentYaer={currentYear}
+              type="month"
+              setCurrent={setCurrentMonth}
+              heightContainer={height}
+              minDate={minDate}
+              maxDate={maxDate}
+            />
+            <CustomSelect
+              currentMonths={currentMonth}
+              currentYaer={currentYear}
+              type="year"
+              setCurrent={setCurrentYaer}
+              heightContainer={height}
+              minDate={minDate}
+              maxDate={maxDate}
+            />
+
+            <NavButton
+              onClick={nextMonth}
+              disabled={
+                maxDate !== undefined
+                  ? maxDate?.getTime() < getTimeFromState(1)
+                  : false
+              }
+              primarycolor={primarycolor}
+              secondarycolor={secondarycolor}
+            >
+              <SvgButtonRightMonth
+                primarycolor={primarycolor}
+                secondarycolor={secondarycolor}
+              />
+            </NavButton>
+            <NavButton
+              onClick={nextYear}
+              disabled={
+                maxDate !== undefined
+                  ? maxDate?.getTime() < getTimeFromState(1)
+                  : false
+              }
+              primarycolor={primarycolor}
+              secondarycolor={secondarycolor}
+            >
+              <SvgButtonRightYear
+                primarycolor={primarycolor}
+                secondarycolor={secondarycolor}
+              />
+            </NavButton>
+          </Header>
+          <div>
+            <SevenColGrid>
+              {abbrWeekdayNames.map((day, i) => (
+                <DayName key={i}>{day}</DayName>
+              ))}
+            </SevenColGrid>
+            <SevenColGrid>
+              {firstDayOfMonth !== 0
+                ? previousDays.map((dayObj) => {
+                    return (
+                      <ButtonDay
+                        key={uuid()}
+                        handleSelection={handleSelection}
+                        date={{
+                          year: dayObj.year,
+                          month: dayObj.month,
+                          day: dayObj.day,
+                        }}
+                        selected={selected}
+                        primarycolor={primarycolor}
+                        secondarycolor={secondarycolor}
+                      >
+                        {dayObj.day}
+                      </ButtonDay>
+                    );
+                  })
+                : null}
+              {days.map((day) => {
+                return (
+                  <ButtonDay
+                    key={uuid()}
+                    handleSelection={handleSelection}
+                    date={{ year: currentYear, month: currentMonth, day: day }}
+                    selected={selected}
+                    primarycolor={primarycolor}
+                    secondarycolor={secondarycolor}
+                  >
+                    {day}
+                  </ButtonDay>
+                );
+              })}
+              {previousDays.length + days.length < 42
+                ? nextDays.map((dayObj) => {
+                    return (
+                      <ButtonDay
+                        key={uuid()}
+                        handleSelection={handleSelection}
+                        date={{
+                          year: dayObj.year,
+                          month: dayObj.month,
+                          day: dayObj.day,
+                        }}
+                        selected={selected}
+                        primarycolor={primarycolor}
+                        secondarycolor={secondarycolor}
+                      >
+                        {dayObj.day}
+                      </ButtonDay>
+                    );
+                  })
+                : null}
+            </SevenColGrid>
+          </div>
+        </PickerWrapper>
+      )}
+    </DatePickerWrapper>
   );
 };
 
 export default DatePicker;
-{
-  /* {range(
-              1,
-              getNumberofDaysInMonth(currentYear, currentMonth) + 1
-            ).map((day: number) => {
-              return (
-                <button
-                  key={day}
-                  style={{ color: color }}
-                  data-day={day}
-                  onClick={() => handleSelection(day)}
-                  
-                >
-                  {day}
-                </button>
-              );
-            })} */
-}
-
-{
-  /* {getSortedDays(currentYear, currentMonth).map((day, i) => (
-              <span key={i}>{day}</span>
-            ))} */
-}

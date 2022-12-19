@@ -1,4 +1,3 @@
-import { SlowBuffer } from "buffer";
 const NUMBER_OF_CELLS: number = 42;
 export const monthsNnames = [
   "January",
@@ -156,9 +155,20 @@ export const createArrayBeforeFromLengthMonth = (
  * @param end
  * @returns
  */
+
 export const range = (start: number, end: number): Array<number> => {
   const result = Array.from(Array(end - start).keys()).map(
     (x: number) => x + start
   );
   return result;
+};
+export const isSameTime = (
+  firstDate: Date,
+  secondDate: Date | string
+): boolean => {
+  if (secondDate instanceof Date) {
+    return firstDate.getTime() === secondDate.getTime();
+  } else {
+    return false;
+  }
 };

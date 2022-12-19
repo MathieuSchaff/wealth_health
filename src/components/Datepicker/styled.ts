@@ -1,73 +1,117 @@
 import styled, { css } from "styled-components";
-
-export const PickerWrapper = styled.div`
+import type { IButtonProps } from "./DatePicker";
+import { BsChevronDoubleRight } from "react-icons/bs";
+import { BsChevronDoubleLeft } from "react-icons/bs";
+import { BsChevronRight } from "react-icons/bs";
+import { BsChevronLeft } from "react-icons/bs";
+interface IContainerColors {
+  readonly primarycolor?: string;
+}
+export const DatePickerWrapper = styled.div`
+  position: relative;
+  border: red 1px solid;
+  width: 325px;
+`;
+// creer un nav button? qui extende d'un button générique ?
+// the big wrapper of all thing
+export const PickerWrapper = styled.div<IContainerColors>`
+  position: absolute;
+  /* top: 0;
+  left: 0;
+  right: 0; */
+  margin-top: 10px;
   border: 1px solid red;
+  border-color: ${({ primarycolor }) => primarycolor || "black"};
+  color: ${({ primarycolor }) => primarycolor || "black"};
   border-radius: 7px;
   display: flex;
   flex-direction: column;
   width: 100%;
+`;
+const svgStyles = ({
+  primarycolor,
+  secondarycolor,
+}: {
+  primarycolor?: string;
+  secondarycolor?: string;
+}) => {
+  return css`
+    width: 100%;
+    height: 70%;
+  `;
+};
+export const SvgButtonLeftYear = styled(BsChevronDoubleLeft)<any>`
+  ${(props) => svgStyles(props)}
+`;
+export const SvgButtonLeftMonth = styled(BsChevronLeft)<any>`
+  ${(props) => svgStyles(props)}
+`;
+export const SvgButtonRightYear = styled(BsChevronDoubleRight)<any>`
+  ${(props) => svgStyles(props)}
+`;
+export const SvgButtonRightMonth = styled(BsChevronRight)<any>`
+  ${(props) => svgStyles(props)}
+`;
+// THE BUTTON TO NAGIVATE BACK AND NEXT OF MONTHS / YEARS
+export const NavButton = styled.button<IButtonProps>`
+  cursor: pointer;
+  width: 1.5rem;
+  height: 1.5rem;
+  color: ${(props) => props.primarycolor || "palevioletred"};
+  border: 1px solid ${(props) => props.primarycolor || "palevioletred"};
+  border-radius: 50%;
+  background-color: white;
+  border-radius: 50%;
+  margin: 0 0.4rem;
+  &:hover {
+    color: white;
+    background-color: ${(props) => props.primarycolor || "palevioletred"};
+  }
+  &:disabled {
+    opacity: 0.5;
+  }
 `;
 
 export const Header = styled.header`
   display: flex;
   justify-content: space-between;
   align-items: center;
-  button {
-    display: block;
-    cursor: pointer;
-  }
+  margin: 0.5rem;
 `;
 export const SevenColGrid = styled.div`
   display: grid;
   grid-template-columns: repeat(7, 1fr);
-  row-gap: 0.5rem;
-  button {
-    background-color: white;
-    cursor: pointer;
-    height: 100%;
-    width: 40px;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    border-radius: 10px;
-  }
-  .active {
-    background-color: teal;
-  }
+  align-items: center;
 `;
-export const StyledCustomSelectContainer = styled.div`
-  flex: 1 0 0;
-  position: relative;
+export const DayName = styled.p`
+  font-weight: bold;
 `;
-export const StyledCustomSelect = styled.div`
-  position: absolute;
-  top: 0;
-  width: 50%;
-  transform: translate(50%);
-  height: ${(props) => props.heightContainer}px;
-  overflow: scroll;
-  overflow-x: hidden;
+export interface TypedButtonDay {
+  onClick: () => void;
+  className: string;
+  primarycolor?: string;
+  secondarycolor?: string;
+}
+export const ButtonDayStyled = styled.p<TypedButtonDay>`
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-weight: 500;
+  aspect-ratio: 1/1;
+  margin: 5px;
   z-index: 10;
-  background-color: black;
-  color: teal;
+  cursor: pointer;
+  border-radius: 50%;
+  color: ${(props) => props.primarycolor || "palevioletred"};
+  &:hover {
+    color: white;
+    background-color: ${(props) => props.secondarycolor || "palevioletred"};
+  }
+  &&.active {
+    background-color: ${(props) => props.secondarycolor || "palevioletred"};
+    color: white;
+    &:hover {
+      opacity: 0.7;
+    }
+  }
 `;
-
-// /* width */
-// ::-webkit-scrollbar {
-//   width: 10px;
-// }
-
-// /* Track */
-// ::-webkit-scrollbar-track {
-//   background: #f1f1f1;
-// }
-
-// /* Handle */
-// ::-webkit-scrollbar-thumb {
-//   background: #888;
-// }
-
-// /* Handle on hover */
-// ::-webkit-scrollbar-thumb:hover {
-//   background: #555;
-// }

@@ -1,5 +1,6 @@
 import { SubmitHandler, useForm } from "react-hook-form";
 import { yupResolver } from "@hookform/resolvers/yup";
+import MyDatePicker from "../../components/Datepicker/DatePicker";
 import * as yup from "yup";
 type Inputs = {
   "first-name": string;
@@ -33,7 +34,6 @@ const Form = () => {
   const {
     register,
     handleSubmit,
-    watch,
     formState: { errors },
   } = useForm<Inputs>({
     resolver: yupResolver(schema),
@@ -54,7 +54,7 @@ const Form = () => {
         {errors["last-name"] && <span>This field is required</span>}
         <p>{errors["last-name"]?.message}</p>
 
-        <label htmlFor="date-of-birth">Date of Birth</label>
+        {/* <label htmlFor="date-of-birth">Date of Birth</label>
         <input id="date-of-birth" type="text" {...register("date-of-birth")} />
         {errors["start-date"] && <span>This field is required</span>}
         <p>{errors["start-date"]?.message}</p>
@@ -62,7 +62,11 @@ const Form = () => {
         <label htmlFor="start-date">Start Date</label>
         <input id="start-date" type="text" {...register("start-date")} />
         {errors["date-of-birth"] && <span>This field is required</span>}
-        <p>{errors["date-of-birth"]?.message}</p>
+        <p>{errors["date-of-birth"]?.message}</p> */}
+
+        {/* <MyDatePicker id="start-date" /> */}
+        {/* <label htmlFor="start-date">Start Date</label>
+        <MyDatePicker1 id="date-of-birth" {...register("start-date")} /> */}
 
         <fieldset className="address">
           <legend>Address</legend>
