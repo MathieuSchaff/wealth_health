@@ -1,107 +1,192 @@
-import { SubmitHandler, useForm } from "react-hook-form";
-import { yupResolver } from "@hookform/resolvers/yup";
 import MyDatePicker from "../../components/Datepicker/DatePicker";
-import * as yup from "yup";
-type Inputs = {
-  "first-name": string;
-  "last-name": string;
-  "date-of-birth": string;
-  "start-date": string;
-  street: string;
-  city: string;
-  state: string;
-  "zip-code": number;
-  department: string;
-};
-const schema = yup
-  .object({
-    firstName: yup.string().required(),
-    age: yup.number().positive().integer().required(),
-    "first-name": yup.string().required(),
-    "last-name": yup.string().required(),
-    "date-of-birth": yup.string().required(),
-    "start-date": yup.string().required(),
-    street: yup.string().required(),
-    city: yup.string().required(),
-    state: yup.string().required(),
-    "zip-code": yup.number().required(),
-    department: yup.string().required(),
-  })
-  .required();
-
+import Select from "react-select";
+import { useZorm } from "react-zorm";
+import {
+  ButtonSubmit,
+  InputForm,
+  LabelForm,
+  FormStyled,
+  FieldSetForm,
+  FormContainer,
+  TitleForm,
+  LegendFormAdress,
+} from "./styledForm";
+import { z } from "zod";
+import React, { FormEvent, useState } from "react";
+const options = [
+  { value: "Sales", label: "Sales" },
+  { value: "Marketing", label: "Marketing" },
+  { value: "Engineering", label: "Engineering" },
+  { value: "Human Resources", label: "Human Resources" },
+  { value: "Legal", label: "Legal" },
+];
+function ErrorMessage(props: { message: string }) {
+  return <div className="error-message">{props.message}</div>;
+}
+const User = z.object({
+  age: z.number().gt(0),
+  firstName: z.string(),
+  lastName: z.string(),
+  dateOfBirth: z.date(),
+  startDate: z.date(),
+  street: z.string(),
+  city: z.string(),
+  state: z.string(),
+  zipCode: z.number().gt(0),
+  department: z.string(),
+});
+// eslint-disable-next-line @typescript-eslint/no-redeclare
+type User = z.infer<typeof User>;
 const Form = () => {
-  console.log("rerender");
-  const {
-    register,
-    handleSubmit,
-    formState: { errors },
-  } = useForm<Inputs>({
-    resolver: yupResolver(schema),
+  // const [formData, setFormData] = useState<User>({
+  //   age: 0,
+  //   firstName: "",
+  //   lastName: "",
+  //   dateOfBirth: new Date(),
+  //   startDate: new Date(),
+  //   street: "",
+  //   city: "",
+  //   state: "",
+  //   zipCode: 0,
+  //   department: "",
+  // });
+  // const [errors, setErrors] = useState<z.ZodError | null>(null);
+  const validate = async () => {
+    // try {
+    //   User.parse(formData);
+    // } catch (err) {
+    //   if (err instanceof z.ZodError) {
+    //     console.log(err.issues);
+    //   }
+    // }
+    // const form = document.querySelector("form");
+    // Object.fromEntries(new FormData(form));
+    // Object.fromEntries(new FormData(form));
+    // console.log("data", new FormData(form));
+    // console.log("data", Object.fromEntries(new FormData(form)));
+  };
+  // function handleChange(event: any) {
+  //   const { name, value } = event.target;
+  //   setFormData((prevData) => ({
+  //     ...prevData,
+  //     [name]: value,
+  //   }));
+  //   console.log("value", formData);
+  // }
+  // const onSubmit = async (e: FormEvent<HTMLFormElement>) => {
+  //   e.preventDefault();
+  //   // validate(e);
+  //   if (e.target instanceof HTMLFormElement) {
+  //     const formData = new FormData(e.target);
+  //     const data = User.safeParse(Object.fromEntries(formData));
+  //     if (!data.success) {
+  //       e.preventDefault();
+  //       console.log("error", data.error);
+  //       setErrors(data.error);
+  //     }
+  //   }
+  // };
+  const zo = useZorm("signup", User, {
+    onValidSubmit(e) {
+      e.preventDefault();
+      alert("Form ok!\n" + JSON.stringify(e.data, null, 2));
+    },
   });
-  const onSubmit: SubmitHandler<Inputs> = (data) => console.log(data);
+  // console.log("zo", zo);
+  const disabled = zo.validation?.success === false;
   return (
-    <div className="form-container">
+    <FormContainer className="form-container">
       <a href="employee-list.html">View Current Employees</a>
-      <h2>Create Employee</h2>
-      <form action="#" id="create-employee" onSubmit={handleSubmit(onSubmit)}>
-        <label htmlFor="first-name">First Name</label>
-        <input type="text" id="first-name" {...register("first-name")} />
-        {errors["first-name"] && <span>This field is required</span>}
-        <p>{errors["first-name"]?.message}</p>
+      <TitleForm>Create Employee</TitleForm>
+      <FormStyled action="#" ref={zo.ref}>
+        <LabelForm htmlFor="firstName">First Name</LabelForm>
+        <InputForm
+          type="text"
+          name={zo.fields.firstName()}
+          className={zo.errors.firstName("errored")}
+          // onChange={handleChange}
+        />
+        {zo.errors.firstName((e) => {
+          console.log("e", e);
+          return <ErrorMessage message={e.message} />;
+        })}
 
-        <label htmlFor="last-name">Last Name</label>
-        <input type="text" id="last-name" {...register("last-name")} />
-        {errors["last-name"] && <span>This field is required</span>}
-        <p>{errors["last-name"]?.message}</p>
+        <LabelForm htmlFor="last-name">Last Name</LabelForm>
+        <InputForm
+          type="text"
+          id="lastName"
+          name="lastName"
+          // onChange={handleChange}
+        />
 
-        {/* <label htmlFor="date-of-birth">Date of Birth</label>
-        <input id="date-of-birth" type="text" {...register("date-of-birth")} />
-        {errors["start-date"] && <span>This field is required</span>}
-        <p>{errors["start-date"]?.message}</p>
+        <FieldSetForm className="address">
+          <LegendFormAdress>Address</LegendFormAdress>
 
-        <label htmlFor="start-date">Start Date</label>
-        <input id="start-date" type="text" {...register("start-date")} />
-        {errors["date-of-birth"] && <span>This field is required</span>}
-        <p>{errors["date-of-birth"]?.message}</p> */}
+          <LabelForm htmlFor="street">Street</LabelForm>
 
-        {/* <MyDatePicker id="start-date" /> */}
-        {/* <label htmlFor="start-date">Start Date</label>
-        <MyDatePicker1 id="date-of-birth" {...register("start-date")} /> */}
+          <InputForm
+            id="street"
+            name="street"
+            type="text"
+            // onChange={handleChange}
+          />
+          {/* {errors["street"] && <span>This field is required</span>}
+          <p>{errors["street"]?.message}</p> */}
 
-        <fieldset className="address">
-          <legend>Address</legend>
+          <LabelForm htmlFor="city">City</LabelForm>
+          <InputForm
+            id="city"
+            name="city"
+            type="text"
+            // onChange={handleChange}
+          />
+          {/* {errors["city"] && <span>This field is required</span>}
+          <p>{errors["city"]?.message}</p> */}
 
-          <label htmlFor="street">Street</label>
-          <input id="street" type="text" {...register("street")} />
-          {errors["street"] && <span>This field is required</span>}
-          <p>{errors["street"]?.message}</p>
+          <LabelForm htmlFor="state">State</LabelForm>
+          <Select
+            name="state"
+            options={options}
+            styles={{
+              control: (baseStyles, state) => ({
+                ...baseStyles,
+                maxWidth: "200px",
+                width: "325px",
+                borderColor: state.isFocused ? "grey" : "#3498db",
+              }),
+            }}
+          />
+          {/* {errors["state"] && <span>This field is required</span>} */}
 
-          <label htmlFor="city">City</label>
-          <input id="city" type="text" {...register("city")} />
-          {errors["city"] && <span>This field is required</span>}
-          <p>{errors["city"]?.message}</p>
+          <LabelForm htmlFor="zip-code">Zip Code</LabelForm>
+          <InputForm
+            id="zipCode"
+            name="zipCode"
+            type="number"
+            // onChange={handleChange}
+          />
+        </FieldSetForm>
+        {/* {errors["zip-code"] && <span>This field is required</span>} */}
 
-          <label htmlFor="state">State</label>
-          <select id="state" {...register("state")}></select>
-          {errors["state"] && <span>This field is required</span>}
-
-          <label htmlFor="zip-code">Zip Code</label>
-          <input id="zip-code" type="number" {...register("zip-code")} />
-        </fieldset>
-        {errors["zip-code"] && <span>This field is required</span>}
-
-        <label htmlFor="department">Department</label>
-        <select id="department" {...register("department")}>
-          <option value="Sales">Sales</option>
-          <option value="Marketing">Marketing</option>
-          <option value="Engineering">Engineering</option>
-          <option value="Human Resources">Human Resources</option>
-          <option value="Legal">Legal</option>
-        </select>
-        {errors.department && <span>This field is required</span>}
-        <input type="submit" value="Send Request" />
-      </form>
-    </div>
+        <LabelForm htmlFor="department">Department</LabelForm>
+        <Select
+          name="department"
+          options={options}
+          styles={{
+            control: (baseStyles, state) => ({
+              ...baseStyles,
+              maxWidth: "200px",
+              width: "325px",
+              borderColor: state.isFocused ? "grey" : "#3498db",
+            }),
+          }}
+        />
+        {/* {errors.department && <span>This field is required</span>} */}
+        {/* <ButtonSubmit type="submit">Submit</ButtonSubmit> */}
+        <button type="submit">Signup!</button>
+        {/* <pre>Validation status: {JSON.stringify(zo.validation, null, 2)}</pre> */}
+      </FormStyled>
+    </FormContainer>
   );
 };
 

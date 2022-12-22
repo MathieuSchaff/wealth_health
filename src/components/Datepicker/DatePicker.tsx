@@ -2,11 +2,19 @@ import { useCallback, useLayoutEffect, useMemo, useRef, useState } from "react";
 import { DayName, PickerWrapper } from "./styled";
 import { Header } from "./styled";
 import { SevenColGrid, DatePickerWrapper } from "./styled";
-
 import { abbrWeekdayNames } from "./dateUtils";
 import uuid from "react-uuid";
 import ButtonDay from "./ButtonDay";
 import CustomSelect from "./CusTomSelect/CustomSelect";
+import {
+  add,
+  differenceInDays,
+  endOfMonth,
+  format,
+  setDate,
+  startOfMonth,
+  sub,
+} from "date-fns";
 import {
   createArrayFromLengthMonth,
   getFirstDayOfTheMonth,
@@ -27,6 +35,7 @@ export interface IButtonProps {
   primarycolor?: string;
   secondarycolor?: string;
 }
+
 const DatePicker = ({
   id,
   minDate,
@@ -35,7 +44,8 @@ const DatePicker = ({
   secondarycolor,
   tertiarycolor,
   onChange,
-  selected,
+  selectedDate,
+  placeholder,
 }: {
   id: string;
   primarycolor?: string;
@@ -43,8 +53,9 @@ const DatePicker = ({
   tertiarycolor?: string;
   minDate?: Date;
   maxDate?: Date;
-  selected: Date;
-  onChange: (date: Date) => void;
+  selectedDate: string;
+  onChange: (date: string) => void;
+  placeholder?: string;
 }) => {
   const [isOpen, setIsOpen] = useState<boolean>(false);
   const [height, setHeight] = useState<number>(0);
@@ -87,10 +98,14 @@ const DatePicker = ({
   }, []);
 
   // set the selected date
-  const handleSelection = (year: number, month: number, day: number): void => {
+  const handleCalendarSelection = (
+    year: number,
+    month: number,
+    day: number
+  ): void => {
     console.log("ENTER HANDLE selection");
 
-    onChange(new Date(year, month, day));
+    onChange(new Date(year, month, day).toDateString());
     setIsOpen(false);
   };
   /**
@@ -101,10 +116,6 @@ const DatePicker = ({
    * @returns
    */
   const getTimeFromState = (_day: number) => {
-    // console.log(
-    //   "getTimeFromState",
-    //   new Date(currentYear, currentMonth, _day).getTime()
-    // );
     return new Date(currentYear, currentMonth, _day).getTime();
   };
   const firstDayOfMonth = useMemo(
@@ -135,24 +146,34 @@ const DatePicker = ({
   const handleKeyDown = (event: React.KeyboardEvent<HTMLInputElement>) => {
     console.log("enter keydown");
     if (event.code === "Enter") {
-      if (!(selected instanceof Date) && new Date(selected).getTime())
-        console.log("enter keydown ENTER problem");
+      const newDate = new Date(selectedDate);
+      // check if the corresponding value that is typed in the input can be converted to a valid Date object
+      if (newDate instanceof Date && !isNaN(newDate.getTime())) {
+        // if valid , set the selected to be the date entered
+        onChange(newDate.toDateString());
+      } else {
+        // if invalid set the current date to an empty string
+        onChange("");
+        console.log("not a date");
+      }
     }
   };
+
   return (
     <DatePickerWrapper>
       <>
-        {/* <label htmlFor={id}>Start date</label> */}
-
+        <p>
+          <strong>Selected Date: </strong>
+          {format(new Date(), "dd LLLL yyyy")}
+        </p>
         <input
           type="text"
-          // id={id}
-          // value={
-
-          defaultValue={selected.toLocaleDateString() || selected}
+          id={id}
+          value={selectedDate}
           onFocus={() => setIsOpen(true)}
           onChange={handleInputChange}
           onKeyDown={handleKeyDown}
+          placeholder={placeholder}
         />
       </>
       {isOpen && (
@@ -250,13 +271,13 @@ const DatePicker = ({
                     return (
                       <ButtonDay
                         key={uuid()}
-                        handleSelection={handleSelection}
+                        handleSelection={handleCalendarSelection}
                         date={{
                           year: dayObj.year,
                           month: dayObj.month,
                           day: dayObj.day,
                         }}
-                        selected={selected}
+                        selectedDate={selectedDate}
                         primarycolor={primarycolor}
                         secondarycolor={secondarycolor}
                       >
@@ -269,9 +290,9 @@ const DatePicker = ({
                 return (
                   <ButtonDay
                     key={uuid()}
-                    handleSelection={handleSelection}
+                    handleSelection={handleCalendarSelection}
                     date={{ year: currentYear, month: currentMonth, day: day }}
-                    selected={selected}
+                    selectedDate={selectedDate}
                     primarycolor={primarycolor}
                     secondarycolor={secondarycolor}
                   >
@@ -284,13 +305,13 @@ const DatePicker = ({
                     return (
                       <ButtonDay
                         key={uuid()}
-                        handleSelection={handleSelection}
+                        handleSelection={handleCalendarSelection}
                         date={{
                           year: dayObj.year,
                           month: dayObj.month,
                           day: dayObj.day,
                         }}
-                        selected={selected}
+                        selectedDate={selectedDate}
                         primarycolor={primarycolor}
                         secondarycolor={secondarycolor}
                       >

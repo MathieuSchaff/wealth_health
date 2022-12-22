@@ -1,26 +1,25 @@
 import React from "react";
 import { ButtonDayStyled } from "./styled";
 import { isSameTime } from "./dateUtils";
-import { string } from "yup";
 
 const ButtonDay = ({
   children,
   handleSelection,
   date,
-  selected,
+  selectedDate,
   primarycolor,
   secondarycolor,
 }: {
   date: { year: number; month: number; day: number };
   children: number;
   handleSelection: (year: number, month: number, day: number) => void;
-  selected: Date;
+  selectedDate: string;
   primarycolor?: string;
   secondarycolor?: string;
 }) => {
   const activeClass = isSameTime(
     new Date(date.year, date.month, date.day),
-    selected
+    new Date(selectedDate)
   )
     ? "active"
     : "";

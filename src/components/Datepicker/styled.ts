@@ -57,15 +57,15 @@ export const NavButton = styled.button<IButtonProps>`
   cursor: pointer;
   width: 1.5rem;
   height: 1.5rem;
-  color: ${(props) => props.primarycolor || "palevioletred"};
-  border: 1px solid ${(props) => props.primarycolor || "palevioletred"};
+  color: ${(props) => props.primarycolor || "teal"};
+  border: 1px solid ${(props) => props.primarycolor || "teal"};
   border-radius: 50%;
   background-color: white;
   border-radius: 50%;
   margin: 0 0.4rem;
   &:hover {
     color: white;
-    background-color: ${(props) => props.primarycolor || "palevioletred"};
+    background-color: ${(props) => props.primarycolor || "teal"};
   }
   &:disabled {
     opacity: 0.5;
@@ -102,13 +102,13 @@ export const ButtonDayStyled = styled.p<TypedButtonDay>`
   z-index: 10;
   cursor: pointer;
   border-radius: 50%;
-  color: ${(props) => props.primarycolor || "palevioletred"};
+  color: ${(props) => props.primarycolor || "teal"};
   &:hover {
     color: white;
-    background-color: ${(props) => props.secondarycolor || "palevioletred"};
+    background-color: ${(props) => props.secondarycolor || "teal"};
   }
   &&.active {
-    background-color: ${(props) => props.secondarycolor || "palevioletred"};
+    background-color: ${(props) => props.secondarycolor || "teal"};
     color: white;
     &:hover {
       opacity: 0.7;

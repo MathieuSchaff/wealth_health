@@ -166,9 +166,12 @@ export const isSameTime = (
   firstDate: Date,
   secondDate: Date | string
 ): boolean => {
-  if (secondDate instanceof Date) {
-    return firstDate.getTime() === secondDate.getTime();
-  } else {
-    return false;
-  }
+  console.log("firstDate", typeof firstDate);
+  console.log("secondDate", typeof secondDate);
+  // if (secondDate instanceof Date) {
+  //   return firstDate.getTime() === secondDate.getTime();
+  // } else {
+  //   return false;
+  // }
+  return new Date(firstDate).getTime() === new Date(secondDate).getTime();
 };
