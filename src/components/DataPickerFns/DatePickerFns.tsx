@@ -103,7 +103,12 @@ const DatePickerFns = ({
       </>
       {isOpen && (
         <PickerWrapper ref={containerRefModal}>
-          <HeaderFns value={value} onChange={onChange} />
+          <HeaderFns
+            value={value}
+            onChange={onChange}
+            minDate={new Date(2018, 7, 22)}
+            maxDate={new Date(2027, 2, 22)}
+          />
           <div>
             <SevenColGrid>
               {weekDays.map((day, i) => (

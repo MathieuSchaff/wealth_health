@@ -22,7 +22,12 @@ function App() {
       /> */}
       {/* <Form /> */}
       {/* <ZofForm /> */}
-      <DatePickerFns value={selectedDate} onChange={setSelectedDate} />
+      <DatePickerFns
+        value={selectedDate}
+        onChange={setSelectedDate}
+        minDate={new Date(2018, 7, 22)}
+        maxDate={new Date(2027, 2, 22)}
+      />
     </div>
   );
 }

@@ -7,8 +7,26 @@ import {
   SvgButtonLeftYear,
   SvgButtonRightYear,
 } from "../Datepicker/styled";
-import { subMonths, addMonths, subYears, addYears, format } from "date-fns";
-const HeaderFns = ({ value, onChange }: { value: any; onChange: any }) => {
+import {
+  subMonths,
+  addMonths,
+  subYears,
+  addYears,
+  format,
+  isBefore,
+  isAfter,
+} from "date-fns";
+const HeaderFns = ({
+  value,
+  onChange,
+  minDate,
+  maxDate,
+}: {
+  value: any;
+  onChange: any;
+  minDate?: Date;
+  maxDate?: Date;
+}) => {
   const prevMonth = () => {
     onChange(subMonths(value, 1));
   };
@@ -23,14 +41,13 @@ const HeaderFns = ({ value, onChange }: { value: any; onChange: any }) => {
   };
   const month = format(value, "MMM");
   const year = format(value, "yyy");
+
   return (
     <Header>
       <NavButton
         onClick={prevYear}
         disabled={
-          minDate !== undefined
-            ? minDate?.getTime() > getTimeFromState(1)
-            : false
+          minDate !== undefined ? isBefore(subYears(value, 1), minDate) : false
         }
       >
         <SvgButtonLeftYear />
@@ -38,9 +55,7 @@ const HeaderFns = ({ value, onChange }: { value: any; onChange: any }) => {
       <NavButton
         onClick={prevMonth}
         disabled={
-          minDate !== undefined
-            ? minDate?.getTime() > getTimeFromState(1)
-            : false
+          minDate !== undefined ? isBefore(subMonths(value, 1), minDate) : false
         }
       >
         <SvgButtonLeftMonth />
@@ -51,9 +66,7 @@ const HeaderFns = ({ value, onChange }: { value: any; onChange: any }) => {
       <NavButton
         onClick={nextMonth}
         disabled={
-          maxDate !== undefined
-            ? maxDate?.getTime() < getTimeFromState(1)
-            : false
+          maxDate !== undefined ? isAfter(addMonths(value, 1), maxDate) : false
         }
       >
         <SvgButtonRightMonth />
@@ -61,9 +74,7 @@ const HeaderFns = ({ value, onChange }: { value: any; onChange: any }) => {
       <NavButton
         onClick={nextYear}
         disabled={
-          maxDate !== undefined
-            ? maxDate?.getTime() < getTimeFromState(1)
-            : false
+          maxDate !== undefined ? isAfter(addYears(value, 1), maxDate) : false
         }
       >
         <SvgButtonRightYear />
