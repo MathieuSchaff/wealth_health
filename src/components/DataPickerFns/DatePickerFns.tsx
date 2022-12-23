@@ -38,7 +38,7 @@ const DatePickerFns = ({
   minDate?: Date;
   maxDate?: Date;
   value: Date;
-  onChange: (date: Date) => void;
+  onChange: React.Dispatch<React.SetStateAction<Date>>;
   placeholder?: string;
   isoFormat: string;
 }) => {
@@ -74,18 +74,24 @@ const DatePickerFns = ({
   };
   // used when click outside of the or when enter is pressed inside the input
   const handleSetValueDate = () => {
+    // if the calendar is not displayed , then no need to set any date => return
     if (!isOpen) {
       return;
     }
+    // create an new Date with the text of the input
     const newDate = new Date(inputText);
-    // check if the corresponding value that is typed in the input can be converted to a valid Date object
+    // check new Date is a valid datez
     if (newDate instanceof Date && !isNaN(newDate.getTime())) {
-      // if valid , set the selected to be the date entered
+      // will set the input text manually to be to the good format ( if format is desired)
       setInputText(format(newDate, isoFormat));
+      // will change the state declared outside of the component
       onChange(newDate);
     } else {
-      // if invalid set the current date to an empty string
+      // if invalid set text input to the date of the day
       setInputText(format(new Date(), isoFormat));
+      //date to an empty string ????
+      // setInputText("");
+      //set the higher state to be the date of the day
       onChange(new Date());
     }
     setIsOpen(false);
@@ -111,6 +117,7 @@ const DatePickerFns = ({
             onChange={onChange}
             minDate={minDate}
             maxDate={maxDate}
+            height={height}
           />
           <div>
             <SevenColGrid>

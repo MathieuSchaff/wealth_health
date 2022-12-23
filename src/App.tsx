@@ -7,7 +7,6 @@ import ZofForm from "./components/ZodForm.tsx/ZodForm";
 
 function App() {
   const [selectedDate, setSelectedDate] = useState<Date>(new Date());
-  // console.log("selectedDate", selectedDate);
   return (
     <div className="App">
       {/* <MyDatePicker1

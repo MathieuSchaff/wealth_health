@@ -1,4 +1,13 @@
-import { format, eachDayOfInterval, startOfWeek, endOfWeek } from "date-fns";
+import {
+  format,
+  eachDayOfInterval,
+  startOfWeek,
+  endOfWeek,
+  startOfYear,
+  endOfYear,
+  eachMonthOfInterval,
+} from "date-fns";
+import { number } from "zod";
 /**
  *
  * @param locale .specifies the language and region to use for the formatting
@@ -13,6 +22,24 @@ export const getWeekDays = (): string[] => {
     weekDays.push(format(day, "EEE"));
   });
   return weekDays;
+};
+interface IMonthFormated {
+  name: string;
+  numberIndexMonth: string;
+}
+export const getMonthsNames = (): IMonthFormated[] => {
+  const now = new Date();
+  const monthsYear: IMonthFormated[] = [];
+  const start = startOfYear(now);
+  const end = endOfYear(now);
+  eachMonthOfInterval({ start, end }).forEach((month) => {
+    console.log("month", format(month, "LLLL"));
+    monthsYear.push({
+      name: format(month, "LLLL"),
+      numberIndexMonth: format(month, "M"),
+    });
+  });
+  return monthsYear;
 };
 
 // export const getWeekDays = ({ locale }: { locale: Locale}): string[] => {

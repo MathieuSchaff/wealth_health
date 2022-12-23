@@ -16,16 +16,19 @@ import {
   isBefore,
   isAfter,
 } from "date-fns";
+import CustomSelect from "./CustomSelectFns";
 const HeaderFns = ({
   value,
   onChange,
   minDate,
   maxDate,
+  height,
 }: {
   value: any;
-  onChange: any;
+  onChange: React.Dispatch<React.SetStateAction<Date>>;
   minDate?: Date;
   maxDate?: Date;
+  height: number;
 }) => {
   const prevMonth = () => {
     onChange(subMonths(value, 1));
@@ -60,9 +63,23 @@ const HeaderFns = ({
       >
         <SvgButtonLeftMonth />
       </NavButton>
+      <CustomSelect
+        value={value}
+        onChange={onChange}
+        height={height}
+        type="month"
+        minDate={minDate}
+        maxDate={maxDate}
+      />
+      <CustomSelect
+        value={value}
+        onChange={onChange}
+        height={height}
+        type="year"
+        minDate={minDate}
+        maxDate={maxDate}
+      />
 
-      <div> {month}</div>
-      <div> {year}</div>
       <NavButton
         onClick={nextMonth}
         disabled={
@@ -84,20 +101,3 @@ const HeaderFns = ({
 };
 
 export default HeaderFns;
-{
-  /* <NavButton
-onClick={nextYear}
-disabled={
-  maxDate !== undefined
-    ? maxDate?.getTime() < getTimeFromState(1)
-    : false
-}
-primarycolor={primarycolor}
-secondarycolor={secondarycolor}
->
-<SvgButtonRightYear
-  primarycolor={primarycolor}
-  secondarycolor={secondarycolor}
-/>
-</NavButton> */
-}
