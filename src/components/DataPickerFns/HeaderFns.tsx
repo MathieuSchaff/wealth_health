@@ -23,12 +23,16 @@ const HeaderFns = ({
   minDate,
   maxDate,
   height,
+  primarycolor,
+  secondarycolor,
 }: {
   value: any;
   onChange: React.Dispatch<React.SetStateAction<Date>>;
   minDate?: Date;
   maxDate?: Date;
   height: number;
+  primarycolor?: string;
+  secondarycolor?: string;
 }) => {
   const prevMonth = () => {
     onChange(subMonths(value, 1));

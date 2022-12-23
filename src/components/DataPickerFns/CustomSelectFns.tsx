@@ -5,17 +5,16 @@ import {
 } from "./styledCustomSelect";
 import uuid from "react-uuid";
 import { useOnClickOutside } from "usehooks-ts";
-import {
-  addMonths,
-  format,
-  isAfter,
-  isBefore,
-  setMonth,
-  setYear,
-  subYears,
-} from "date-fns";
+import { format, isAfter, isBefore, setMonth, setYear } from "date-fns";
 import { getMonthsNames } from "./datepickerfnsUtils";
-import { subMonths } from "date-fns/esm";
+import { ButtonCustomSelectFns } from "./styledCustomSelect";
+export interface IButtonSelect {
+  key: string;
+  onClick: (monthOrYaer: number) => void;
+  disabled?: boolean;
+  primarycolor?: string;
+  secondarycolor?: string;
+}
 
 /**
  * This function is the month or the yaer.
@@ -37,6 +36,8 @@ const CustomSelect = ({
   minDate,
   maxDate,
   onChange,
+  primarycolor,
+  secondarycolor,
 }: {
   value: Date;
   maxDate?: Date;
@@ -44,6 +45,8 @@ const CustomSelect = ({
   onChange: React.Dispatch<React.SetStateAction<Date>>;
   height: number;
   type: "year" | "month";
+  primarycolor?: string;
+  secondarycolor?: string;
 }) => {
   const ref = useRef<HTMLDivElement>(null);
   const [isOpen, setIsOpen] = useState<boolean>(false);
@@ -78,18 +81,15 @@ const CustomSelect = ({
           ? isAfter(setMonth(value, Number(month.numberIndexMonth)), maxDate)
           : false;
       return (
-        <button
+        <ButtonCustomSelectFns
           key={uuid()}
-          onClick={() => handleSetCurrent(Number(month.numberIndexMonth))}
+          onClick={() => handleSetCurrent(Number(month.numberIndexMonth) - 1)}
           disabled={isBeforeMinDate || isAfterDate}
-          style={
-            isBeforeMinDate || isAfterDate
-              ? { color: "red" }
-              : { color: "blue" }
-          }
+          primarycolor={primarycolor}
+          secondarycolor={secondarycolor}
         >
           {month.name}
-        </button>
+        </ButtonCustomSelectFns>
       );
     });
   } else {
@@ -106,9 +106,14 @@ const CustomSelect = ({
 
       // it will render the button inside and this button will allow to select a year
       return (
-        <button key={uuid()} onClick={() => handleSetCurrent(year)}>
+        <ButtonCustomSelectFns
+          key={uuid()}
+          onClick={() => handleSetCurrent(year)}
+          primarycolor={primarycolor}
+          secondarycolor={secondarycolor}
+        >
           {year}
-        </button>
+        </ButtonCustomSelectFns>
       );
     });
   }

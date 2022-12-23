@@ -25,7 +25,6 @@ const DatePickerFns = ({
   maxDate,
   primarycolor,
   secondarycolor,
-  tertiarycolor,
   onChange,
   value,
   placeholder,
@@ -34,7 +33,6 @@ const DatePickerFns = ({
   id?: string;
   primarycolor?: string;
   secondarycolor?: string;
-  tertiarycolor?: string;
   minDate?: Date;
   maxDate?: Date;
   value: Date;
@@ -118,6 +116,8 @@ const DatePickerFns = ({
             minDate={minDate}
             maxDate={maxDate}
             height={height}
+            primarycolor={primarycolor}
+            secondarycolor={secondarycolor}
           />
           <div>
             <SevenColGrid>
