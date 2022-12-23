@@ -41,6 +41,7 @@ const ButtonDay = ({
   mainArray,
   setIsOpen,
   setInputText,
+  isoFormat,
 }: {
   children: number;
   onChange: (date: Date) => void;
@@ -51,13 +52,14 @@ const ButtonDay = ({
   dayNumber: number;
   setIsOpen: React.Dispatch<React.SetStateAction<boolean>>;
   setInputText: React.Dispatch<React.SetStateAction<string>>;
+  isoFormat: string;
 }) => {
   const myDay = setDate(value, dayNumber);
   const sameDay = mainArray && isSameDay(myDay, value);
   const activeClass = sameDay ? "active" : "";
   const handleClick = () => {
     onChange(myDay);
-    setInputText(format(myDay, "dd-MM-yyyy"));
+    setInputText(format(myDay, isoFormat));
     setIsOpen(false);
   };
   return (

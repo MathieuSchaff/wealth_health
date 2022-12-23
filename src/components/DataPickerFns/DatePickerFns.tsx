@@ -29,6 +29,7 @@ const DatePickerFns = ({
   onChange,
   value,
   placeholder,
+  isoFormat,
 }: {
   id?: string;
   primarycolor?: string;
@@ -39,10 +40,11 @@ const DatePickerFns = ({
   value: Date;
   onChange: (date: Date) => void;
   placeholder?: string;
+  isoFormat: string;
 }) => {
   const [isOpen, setIsOpen] = useState<boolean>(false);
   const [inputText, setInputText] = useState<string>(
-    format(new Date(), "dd-MM-yyyy")
+    format(new Date(), isoFormat)
   );
 
   const weekDays = getWeekDays();
@@ -70,20 +72,21 @@ const DatePickerFns = ({
       handleSetValueDate();
     }
   };
+  // used when click outside of the or when enter is pressed inside the input
   const handleSetValueDate = () => {
+    if (!isOpen) {
+      return;
+    }
     const newDate = new Date(inputText);
     // check if the corresponding value that is typed in the input can be converted to a valid Date object
     if (newDate instanceof Date && !isNaN(newDate.getTime())) {
-      console.log("its a date");
       // if valid , set the selected to be the date entered
-      setInputText(format(new Date(), "dd-MM-yyyy"));
+      setInputText(format(newDate, isoFormat));
       onChange(newDate);
     } else {
       // if invalid set the current date to an empty string
-      setInputText("");
-
+      setInputText(format(new Date(), isoFormat));
       onChange(new Date());
-      console.log("not a date");
     }
     setIsOpen(false);
   };
@@ -106,8 +109,8 @@ const DatePickerFns = ({
           <HeaderFns
             value={value}
             onChange={onChange}
-            minDate={new Date(2018, 7, 22)}
-            maxDate={new Date(2027, 2, 22)}
+            minDate={minDate}
+            maxDate={maxDate}
           />
           <div>
             <SevenColGrid>
@@ -128,6 +131,7 @@ const DatePickerFns = ({
                     mainArray={false}
                     setIsOpen={setIsOpen}
                     setInputText={setInputText}
+                    isoFormat={isoFormat}
                   >
                     {day}
                   </ButtonDay>
@@ -146,6 +150,7 @@ const DatePickerFns = ({
                     mainArray={true}
                     setIsOpen={setIsOpen}
                     setInputText={setInputText}
+                    isoFormat={isoFormat}
                   >
                     {date}
                   </ButtonDay>
@@ -165,6 +170,7 @@ const DatePickerFns = ({
                         mainArray={false}
                         setIsOpen={setIsOpen}
                         setInputText={setInputText}
+                        isoFormat={isoFormat}
                       >
                         {date}
                       </ButtonDay>

@@ -7,7 +7,7 @@ import ZofForm from "./components/ZodForm.tsx/ZodForm";
 
 function App() {
   const [selectedDate, setSelectedDate] = useState<Date>(new Date());
-  console.log("selectedDate", selectedDate);
+  // console.log("selectedDate", selectedDate);
   return (
     <div className="App">
       {/* <MyDatePicker1
@@ -27,6 +27,7 @@ function App() {
         onChange={setSelectedDate}
         minDate={new Date(2018, 7, 22)}
         maxDate={new Date(2027, 2, 22)}
+        isoFormat="yyyy-MM-dd"
       />
     </div>
   );
