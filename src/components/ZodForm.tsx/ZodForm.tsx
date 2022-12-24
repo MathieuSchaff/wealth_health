@@ -14,6 +14,7 @@ import {
 import { z } from "zod";
 import React, { FormEvent, useState } from "react";
 import { setFlagsFromString } from "v8";
+import DatePickerFns from "../DataPickerFns/DatePickerFns";
 const options = [
   { value: "Sales", label: "Sales" },
   { value: "Marketing", label: "Marketing" },
@@ -46,6 +47,8 @@ const FormSchema = z.object({
 // eslint-disable-next-line @typescript-eslint/no-redeclare
 type FormSchema = z.infer<typeof FormSchema>;
 const Form = () => {
+  const [selectedDate, setSelectedDate] = useState<Date>(new Date());
+
   const zo = useZorm("signup", FormSchema, {
     onValidSubmit(e) {
       e.preventDefault();
@@ -127,6 +130,15 @@ const Form = () => {
             <ErrorMessage message={e.message} />
           ))}
         </FieldSetForm>
+        <DatePickerFns
+          value={selectedDate}
+          onChange={setSelectedDate}
+          minDate={new Date(2018, 7, 22)}
+          maxDate={new Date(2027, 2, 22)}
+          isoFormat="yyyy-MM-dd"
+          primarycolor="red"
+          secondarycolor="purple"
+        />
         <ButtonSubmit type="submit">Submit</ButtonSubmit>
         {/* <pre>Validation status: {JSON.stringify(zo.validation, null, 2)}</pre> */}
       </FormStyled>

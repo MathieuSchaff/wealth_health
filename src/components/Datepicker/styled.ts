@@ -11,6 +11,7 @@ export const DatePickerWrapper = styled.div`
   position: relative;
   border: red 1px solid;
   width: 325px;
+  z-index: 10;
 `;
 // creer un nav button? qui extende d'un button générique ?
 // the big wrapper of all thing
@@ -19,6 +20,8 @@ export const PickerWrapper = styled.div<IContainerColors>`
   /* top: 0;
   left: 0;
   right: 0; */
+  z-index: 100;
+  background-color: white;
   margin-top: 10px;
   border: 1px solid red;
   border-color: ${({ primarycolor }) => primarycolor || "black"};
