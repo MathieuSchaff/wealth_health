@@ -46,8 +46,6 @@ const HeaderFns = ({
   const nextYear = () => {
     onChange(addYears(value, 1));
   };
-  const month = format(value, "MMM");
-  const year = format(value, "yyy");
 
   return (
     <Header>
@@ -56,6 +54,8 @@ const HeaderFns = ({
         disabled={
           minDate !== undefined ? isBefore(subYears(value, 1), minDate) : false
         }
+        primarycolor={primarycolor}
+        secondarycolor={secondarycolor}
       >
         <SvgButtonLeftYear />
       </NavButton>
@@ -64,6 +64,8 @@ const HeaderFns = ({
         disabled={
           minDate !== undefined ? isBefore(subMonths(value, 1), minDate) : false
         }
+        primarycolor={primarycolor}
+        secondarycolor={secondarycolor}
       >
         <SvgButtonLeftMonth />
       </NavButton>
@@ -74,6 +76,8 @@ const HeaderFns = ({
         type="month"
         minDate={minDate}
         maxDate={maxDate}
+        primarycolor={primarycolor}
+        secondarycolor={secondarycolor}
       />
       <CustomSelect
         value={value}
@@ -82,6 +86,8 @@ const HeaderFns = ({
         type="year"
         minDate={minDate}
         maxDate={maxDate}
+        primarycolor={primarycolor}
+        secondarycolor={secondarycolor}
       />
 
       <NavButton
@@ -89,6 +95,8 @@ const HeaderFns = ({
         disabled={
           maxDate !== undefined ? isAfter(addMonths(value, 1), maxDate) : false
         }
+        primarycolor={primarycolor}
+        secondarycolor={secondarycolor}
       >
         <SvgButtonRightMonth />
       </NavButton>
@@ -97,6 +105,8 @@ const HeaderFns = ({
         disabled={
           maxDate !== undefined ? isAfter(addYears(value, 1), maxDate) : false
         }
+        primarycolor={primarycolor}
+        secondarycolor={secondarycolor}
       >
         <SvgButtonRightYear />
       </NavButton>

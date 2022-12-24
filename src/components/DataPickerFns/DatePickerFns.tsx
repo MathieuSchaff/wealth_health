@@ -139,6 +139,8 @@ const DatePickerFns = ({
                     setIsOpen={setIsOpen}
                     setInputText={setInputText}
                     isoFormat={isoFormat}
+                    minDate={minDate}
+                    maxDate={maxDate}
                   >
                     {day}
                   </ButtonDay>
@@ -158,6 +160,8 @@ const DatePickerFns = ({
                     setIsOpen={setIsOpen}
                     setInputText={setInputText}
                     isoFormat={isoFormat}
+                    minDate={minDate}
+                    maxDate={maxDate}
                   >
                     {date}
                   </ButtonDay>
@@ -178,6 +182,8 @@ const DatePickerFns = ({
                         setIsOpen={setIsOpen}
                         setInputText={setInputText}
                         isoFormat={isoFormat}
+                        minDate={minDate}
+                        maxDate={maxDate}
                       >
                         {date}
                       </ButtonDay>

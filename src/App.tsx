@@ -27,6 +27,8 @@ function App() {
         minDate={new Date(2018, 7, 22)}
         maxDate={new Date(2027, 2, 22)}
         isoFormat="yyyy-MM-dd"
+        primarycolor="red"
+        secondarycolor="purple"
       />
     </div>
   );
