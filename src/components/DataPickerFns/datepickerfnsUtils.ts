@@ -33,7 +33,6 @@ export const getMonthsNames = (): IMonthFormated[] => {
   const start = startOfYear(now);
   const end = endOfYear(now);
   eachMonthOfInterval({ start, end }).forEach((month) => {
-    console.log("month", format(month, "LLLL"));
     monthsYear.push({
       name: format(month, "LLLL"),
       numberIndexMonth: format(month, "M"),

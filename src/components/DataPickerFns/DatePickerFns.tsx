@@ -6,6 +6,7 @@ import {
   getDaysInMonth,
   subMonths,
   addMonths,
+  setDefaultOptions,
 } from "date-fns";
 import HeaderFns from "./HeaderFns";
 import {
@@ -18,7 +19,8 @@ import { getWeekDays, previousDaysArray } from "./datepickerfnsUtils";
 import ButtonDay from "./ButtonDayStyledFns";
 
 import uuid from "react-uuid";
-// setDefaultOptions({ locale: fr });
+import { fr } from "date-fns/locale";
+setDefaultOptions({ locale: fr });
 const DatePickerFns = ({
   id,
   minDate,

@@ -12,7 +12,6 @@ import {
   addMonths,
   subYears,
   addYears,
-  format,
   isBefore,
   isAfter,
 } from "date-fns";
@@ -92,9 +91,7 @@ const HeaderFns = ({
 
       <NavButton
         onClick={nextMonth}
-        disabled={
-          maxDate !== undefined ? isAfter(addMonths(value, 1), maxDate) : false
-        }
+        disabled={maxDate !== undefined && isAfter(value, maxDate)}
         primarycolor={primarycolor}
         secondarycolor={secondarycolor}
       >
@@ -102,9 +99,7 @@ const HeaderFns = ({
       </NavButton>
       <NavButton
         onClick={nextYear}
-        disabled={
-          maxDate !== undefined ? isAfter(addYears(value, 1), maxDate) : false
-        }
+        disabled={maxDate !== undefined && isAfter(addYears(value, 1), maxDate)}
         primarycolor={primarycolor}
         secondarycolor={secondarycolor}
       >

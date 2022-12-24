@@ -74,7 +74,7 @@ const ButtonDay = ({
   // every button day that is greater than minDate is not disabled ( so false)
   const isMyDayAfterMinimumDate =
     minDate !== undefined && isBefore(myDay, minDate);
-  // if the day of the button ( myDay) is after the maxDate, will return true
+  // if the dateis after the maxDate, will return true
   const isMyDayBeforeMinimumDate =
     maxDate !== undefined && isAfter(myDay, maxDate);
   //if the date is between the minimum date and the maximum date

@@ -100,10 +100,7 @@ const CustomSelect = ({
     );
 
     content = array.map((year) => {
-      console.log("year", year);
-      console.log("typeof year", typeof year);
       // if the year of the future button is superior to the max date the button will be disable
-
       // it will render the button inside and this button will allow to select a year
       return (
         <ButtonCustomSelectFns
@@ -117,7 +114,6 @@ const CustomSelect = ({
       );
     });
   }
-  //   console.log(heightContainer);
   useOnClickOutside(ref, handleClickOutside);
   let monthOrYear;
   if (type === "month") {
