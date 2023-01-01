@@ -1,5 +1,5 @@
 import React from "react";
-import { ButtonDayStyled } from "./styled";
+import { ButtonDayStyled } from "../DataPickerFns/styled";
 import { isSameTime } from "./dateUtils";
 
 const ButtonDay = ({

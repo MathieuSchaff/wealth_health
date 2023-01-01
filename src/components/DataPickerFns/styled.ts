@@ -1,5 +1,5 @@
 import styled, { css } from "styled-components";
-import type { IButtonProps } from "./DatePicker";
+import type { IButtonProps } from "../Datepicker/DatePicker";
 import { BsChevronDoubleRight } from "react-icons/bs";
 import { BsChevronDoubleLeft } from "react-icons/bs";
 import { BsChevronRight } from "react-icons/bs";
@@ -9,9 +9,6 @@ interface IContainerColors {
 }
 export const DatePickerWrapper = styled.div`
   position: relative;
-  border: red 1px solid;
-  width: 325px;
-  z-index: 10;
 `;
 // creer un nav button? qui extende d'un button générique ?
 // the big wrapper of all thing
@@ -20,7 +17,7 @@ export const PickerWrapper = styled.div<IContainerColors>`
   /* top: 0;
   left: 0;
   right: 0; */
-  z-index: 100;
+  z-index: 10;
   background-color: white;
   margin-top: 10px;
   border: 1px solid red;

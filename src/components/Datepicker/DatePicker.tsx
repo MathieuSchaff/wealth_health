@@ -1,7 +1,7 @@
 import { useCallback, useLayoutEffect, useMemo, useRef, useState } from "react";
-import { DayName, PickerWrapper } from "./styled";
-import { Header } from "./styled";
-import { SevenColGrid, DatePickerWrapper } from "./styled";
+import { DayName, PickerWrapper } from "../DataPickerFns/styled";
+import { Header } from "../DataPickerFns/styled";
+import { SevenColGrid, DatePickerWrapper } from "../DataPickerFns/styled";
 import { abbrWeekdayNames } from "./dateUtils";
 import uuid from "react-uuid";
 import ButtonDay from "./ButtonDay";
@@ -27,7 +27,7 @@ import {
   SvgButtonRightMonth,
   SvgButtonLeftYear,
   SvgButtonLeftMonth,
-} from "./styled";
+} from "../DataPickerFns/styled";
 
 export interface IButtonProps {
   onClick?: () => void;

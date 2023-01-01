@@ -4,10 +4,9 @@ export const FormContainer = styled.div`
   flex-direction: column;
   align-items: center;
   background-color: #ecf0f1;
-  width: 50%;
-  padding: 3rem;
   border-radius: 2rem;
   font-family: "Lato", sans-serif;
+  max-width: 450px;
 `;
 export const TitleForm = styled.h2`
   color: #3498db;
@@ -20,14 +19,11 @@ export const FormStyled = styled.form`
   display: flex;
   flex-direction: column;
   align-items: center;
-  background-color: #ffffff;
   border-radius: 35px;
-  padding: 50px;
-  max-width: 500px;
 `;
 
 export const InputForm = styled.input`
-  max-width: 200px;
+  max-width: 225px;
   padding: 6px;
   font-size: 15px;
   border-width: 1px;
@@ -37,7 +33,6 @@ export const InputForm = styled.input`
   border-style: solid;
   border-radius: 8px;
   box-shadow: 0px 0px 5px rgba(66, 66, 66, 0.75);
-  text-shadow: 0px 0px 5px rgba(66, 66, 66, 0.75);
   outline: none;
 
   &:hover {

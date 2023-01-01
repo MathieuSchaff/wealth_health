@@ -1,26 +1,17 @@
-import MyDatePicker1 from "./components/Datepicker/DatePicker";
+import { Link, Route, Routes } from "react-router-dom";
 import "./App.css";
-import Form from "./components/Form/Form";
-import { useState } from "react";
-import DatePickerFns from "./components/DataPickerFns/DatePickerFns";
 import ZofForm from "./components/ZodForm.tsx/ZodForm";
+import UsersTable from "./pages/UsersTable";
 
 function App() {
-  const [selectedDate, setSelectedDate] = useState<Date>(new Date());
   return (
     <div className="App">
-      {/* <MyDatePicker1
-        minDate={new Date(2018, 7, 22)}
-        maxDate={new Date(2027, 2, 22)}
-        primarycolor="teal"
-        secondarycolor="blue"
-        tertiarycolor="red"
-        id="start-date"
-        selectedDate={selectedDate}
-        onChange={(date: string) => setSelectedDate(date)}
-      /> */}
-      {/* <Form /> */}
-      <ZofForm />
+      <Routes>
+        <Route path="/" element={<ZofForm />} />
+        <Route path="users" element={<UsersTable />} />
+      </Routes>
+      <Link to="/">Go to form</Link>
+      <Link to="/users">Go to users</Link>
     </div>
   );
 }

@@ -14,10 +14,10 @@ import {
   DatePickerWrapper,
   DayName,
   PickerWrapper,
-} from "../Datepicker/styled";
+} from "./styled";
 import { getWeekDays, previousDaysArray } from "./datepickerfnsUtils";
 import ButtonDay from "./ButtonDayStyledFns";
-
+import { InputForm } from "../Form/styledForm";
 import uuid from "react-uuid";
 import { fr } from "date-fns/locale";
 setDefaultOptions({ locale: fr });
@@ -31,6 +31,7 @@ const DatePickerFns = ({
   value,
   placeholder,
   isoFormat,
+  name,
 }: {
   id?: string;
   primarycolor?: string;
@@ -41,6 +42,7 @@ const DatePickerFns = ({
   onChange: React.Dispatch<React.SetStateAction<Date>>;
   placeholder?: string;
   isoFormat: string;
+  name: string;
 }) => {
   const [isOpen, setIsOpen] = useState<boolean>(false);
   const [inputText, setInputText] = useState<string>(
@@ -99,17 +101,16 @@ const DatePickerFns = ({
   useOnClickOutside(container, handleSetValueDate);
   return (
     <DatePickerWrapper ref={container}>
-      <>
-        <input
-          type="text"
-          id={id}
-          value={inputText}
-          onChange={handleInputChange}
-          onFocus={() => setIsOpen(true)}
-          onKeyDown={handleKeyDown}
-          placeholder={placeholder}
-        />
-      </>
+      <InputForm
+        type="text"
+        id={id}
+        value={inputText}
+        onChange={handleInputChange}
+        onFocus={() => setIsOpen(true)}
+        onKeyDown={handleKeyDown}
+        placeholder={placeholder}
+        name={name}
+      />
       {isOpen && (
         <PickerWrapper ref={containerRefModal}>
           <HeaderFns

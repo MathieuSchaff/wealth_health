@@ -1,4 +1,3 @@
-import MyDatePicker from "../../components/Datepicker/DatePicker";
 import Select from "react-select";
 import { useZorm } from "react-zorm";
 import {
@@ -12,9 +11,9 @@ import {
   LegendFormAdress,
 } from "../Form/styledForm";
 import { z } from "zod";
-import React, { FormEvent, useState } from "react";
-import { setFlagsFromString } from "v8";
+import { useState } from "react";
 import DatePickerFns from "../DataPickerFns/DatePickerFns";
+import { useUsersStore } from "../../zustandStore";
 const options = [
   { value: "Sales", label: "Sales" },
   { value: "Marketing", label: "Marketing" },
@@ -29,30 +28,51 @@ function ErrorMessage(props: { message: string }) {
 const FormSchema = z.object({
   firstName: z.string().min(1),
   lastName: z.string().min(1),
-  age: z
-    .string()
-    .regex(/^[0-9]+$/)
-    .transform(Number),
-  //   dateOfBirth: z.date(),
-  //   startDate: z.date(),
+
+  dateOfBirth: z.preprocess(
+    (arg) => {
+      if (typeof arg == "string" || arg instanceof Date) return new Date(arg);
+    },
+    z
+      .date({
+        required_error: "Please select a date and time",
+        invalid_type_error: "That's not a date!",
+      })
+      .min(new Date(2018, 7, 22), { message: "Too old" })
+      .max(new Date(2027, 2, 22), { message: "Too young!" })
+  ),
+  startDate: z.preprocess(
+    (arg) => {
+      if (typeof arg == "string" || arg instanceof Date) return new Date(arg);
+    },
+    z.date({
+      required_error: "Please select a date and time",
+      invalid_type_error: "That's not a date!",
+    })
+  ),
   street: z.string().min(1),
   city: z.string().min(1),
   state: z.string().min(1),
   zipCode: z
+
     .string()
     .regex(/^[0-9]+$/)
     .transform(Number),
   department: z.string().min(1),
 });
+
 // eslint-disable-next-line @typescript-eslint/no-redeclare
-type FormSchema = z.infer<typeof FormSchema>;
+export type FormSchema = z.infer<typeof FormSchema>;
 const Form = () => {
+  const addOneUser = useUsersStore((state) => state.addOneUser);
+
   const [selectedDate, setSelectedDate] = useState<Date>(new Date());
 
   const zo = useZorm("signup", FormSchema, {
     onValidSubmit(e) {
       e.preventDefault();
-      alert("Form ok!\n" + JSON.stringify(e.data, null, 2));
+      console.log(e.data);
+      addOneUser(e.data);
     },
   });
 
@@ -71,13 +91,34 @@ const Form = () => {
         {zo.errors.lastName((e) => (
           <ErrorMessage message={e.message} />
         ))}
-        <LabelForm htmlFor="age">Age</LabelForm>
-
-        <InputForm type="text" name={zo.fields.age()} />
-        {zo.errors.age((e) => (
-          <ErrorMessage message="Age must a number" />
+        <LabelForm htmlFor="dateOfBirth">Date of birth</LabelForm>
+        <DatePickerFns
+          value={selectedDate}
+          onChange={setSelectedDate}
+          minDate={new Date(2018, 7, 22)}
+          maxDate={new Date(2027, 2, 22)}
+          isoFormat="yyyy-MM-dd"
+          primarycolor="red"
+          secondarycolor="purple"
+          name={zo.fields.dateOfBirth()}
+        />
+        {zo.errors.dateOfBirth((e) => (
+          <ErrorMessage message={e.message} />
         ))}
-
+        <LabelForm htmlFor="startDate">Start Date</LabelForm>
+        <DatePickerFns
+          value={selectedDate}
+          onChange={setSelectedDate}
+          minDate={new Date(2018, 7, 22)}
+          maxDate={new Date(2027, 2, 22)}
+          isoFormat="yyyy-MM-dd"
+          primarycolor="red"
+          secondarycolor="purple"
+          name={zo.fields.startDate()}
+        />
+        {zo.errors.startDate((e) => (
+          <ErrorMessage message={e.message} />
+        ))}
         <FieldSetForm className="address">
           <LegendFormAdress>Address</LegendFormAdress>
 
@@ -130,17 +171,8 @@ const Form = () => {
             <ErrorMessage message={e.message} />
           ))}
         </FieldSetForm>
-        <DatePickerFns
-          value={selectedDate}
-          onChange={setSelectedDate}
-          minDate={new Date(2018, 7, 22)}
-          maxDate={new Date(2027, 2, 22)}
-          isoFormat="yyyy-MM-dd"
-          primarycolor="red"
-          secondarycolor="purple"
-        />
+
         <ButtonSubmit type="submit">Submit</ButtonSubmit>
-        {/* <pre>Validation status: {JSON.stringify(zo.validation, null, 2)}</pre> */}
       </FormStyled>
     </FormContainer>
   );

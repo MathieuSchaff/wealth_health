@@ -6,7 +6,7 @@ import {
   SvgButtonLeftMonth,
   SvgButtonLeftYear,
   SvgButtonRightYear,
-} from "../Datepicker/styled";
+} from "./styled";
 import {
   subMonths,
   addMonths,
