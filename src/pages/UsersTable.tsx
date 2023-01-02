@@ -193,7 +193,7 @@ const UsersTable = () => {
       <DivContainerTable
       //  style={{ overflowX: "auto" }}
       >
-        <STable style={{ width: table.getCenterTotalSize() }}>
+        <STable style={{ width: table.getCenterTotalSize() }} stripe>
           <STHead>
             {table.getHeaderGroups().map((headerGroup) => (
               <STHeadTR key={headerGroup.id}>

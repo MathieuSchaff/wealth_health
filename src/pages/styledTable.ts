@@ -1,4 +1,4 @@
-import styled from "styled-components";
+import styled, { css } from "styled-components";
 export const lightTheme = {
   white: "rgb(255, 255, 255)",
   bg: "rgb(245, 245, 245)",
@@ -42,12 +42,20 @@ export const DivContainerTable = styled.div`
     background: green;
   }
 `;
-export const STable = styled.table`
+export const STable = styled.table<{ stripe: boolean }>`
   width: 100%;
   border-collapse: collapse;
+  border-radius: 10px;
+
   text-align: center;
-  border-radius: ${v.borderRadius};
   overflow: hidden;
+  ${(props) =>
+    props.stripe &&
+    css`
+      tbody tr:nth-of-type(odd) {
+        background-color: lightgrey;
+      }
+    `}
 `;
 
 export const STHead = styled.thead`
@@ -55,9 +63,7 @@ export const STHead = styled.thead`
   z-index: 100;
 `;
 
-export const STHeadTR = styled.tr`
-  background: ${({ theme }) => theme.bg};
-`;
+export const STHeadTR = styled.tr``;
 
 export const STH = styled.th`
   font-weight: normal;
@@ -66,12 +72,18 @@ export const STH = styled.th`
   text-transform: capitalize;
   font-weight: 600;
   font-size: 14px;
-  :not(:last-of-type) {
+  /* :not(:last-of-type) {
     border-right: 1px solid ${({ theme }) => theme.bg2};
-  }
+  } */
   :first-of-type {
     width: 1%;
     white-space: nowrap;
+  }
+  background-color: teal;
+
+  /* Style the odd-numbered rows with a different background color */
+  &:nth-of-type(odd) {
+    background-color: lightgrey;
   }
 `;
 
@@ -83,6 +95,28 @@ export const STBodyTR = styled.tr`
 
 export const STD = styled.td`
   padding: ${v.smSpacing};
-  border: 1px solid ${({ theme }) => theme.bg2};
   font-size: 14px;
+`;
+export const SButtonHeaderContainer = styled.div`
+  display: flex;
+  flex-direction: column;
+`;
+export const SHeaderContainer = styled.div`
+  display: flex;
+  align-items: center;
+  justify-content: space-around;
+`;
+export const SHeaderButton = styled.button.attrs((props) => ({
+  tabIndex: 0,
+}))<{ disabled: boolean }>`
+  background: transparent;
+  cursor: pointer;
+  border: none;
+  outline: none;
+  &:disabled {
+    background-color: grey;
+    color: lightgrey;
+    cursor: not-allowed;
+    opacity: 0.3;
+  }
 `;

@@ -1,5 +1,10 @@
 import { flexRender, Header } from "@tanstack/react-table";
-import { STH } from "./styledTable";
+import {
+  SButtonHeaderContainer,
+  SHeaderButton,
+  SHeaderContainer,
+  STH,
+} from "./styledTable";
 import type { FormatedDataType } from "./UsersTable";
 const HeaderCell = ({
   header,
@@ -25,23 +30,27 @@ const HeaderCell = ({
   return (
     <STH key={header.id}>
       {header.isPlaceholder ? null : (
-        <div role={isSortable ? "button" : undefined} aria-hidden>
+        <SHeaderContainer aria-hidden>
           {flexRender(header.column.columnDef.header, header.getContext())}
-          <button
-            onClick={header.column.getToggleSortingHandler()}
-            disabled={isDesc}
-          >
-            {" "}
-            🔼
-          </button>
-          <button
-            onClick={header.column.getToggleSortingHandler()}
-            disabled={isAsc}
-          >
-            {" "}
-            🔽
-          </button>
-        </div>
+          <SButtonHeaderContainer>
+            <SHeaderButton
+              onClick={header.column.getToggleSortingHandler()}
+              disabled={isDesc}
+              role={isSortable ? "button" : undefined}
+            >
+              {" "}
+              🔼
+            </SHeaderButton>
+            <SHeaderButton
+              onClick={header.column.getToggleSortingHandler()}
+              disabled={isAsc}
+              role={isSortable ? "button" : undefined}
+            >
+              {" "}
+              🔽
+            </SHeaderButton>
+          </SButtonHeaderContainer>
+        </SHeaderContainer>
       )}
     </STH>
   );
