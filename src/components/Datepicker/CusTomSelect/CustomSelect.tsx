@@ -55,43 +55,48 @@ const CustomSelect2 = ({
 
   ariaArrow?: IArrowHeaderAria;
 }) => {
-  // I want to set the value of the higher state to be the month click or the year clicked
-
   let monthOrYear = useMemo(() => {
     if (type === "month") {
-      return format(value, formatMonth ?? "LLL");
+      return format(value, formatMonth ?? "LLLL");
     } else {
       return format(value, formatYear ?? "yyy");
     }
   }, [formatMonth, formatYear, type, value]);
+  console.log(monthOrYear);
+
   let testId = useMemo(() => {
     if (type === "month") {
       return "monthSelect";
     } else {
       return "yearSelect";
     }
-  }, []);
+  }, [type]);
   let accessibility = useMemo(() => {
     if (type === "month") {
       return ariaArrow?.customSelectMonth ?? "select another month";
     } else {
       return ariaArrow?.customSelectYear ?? "select another year";
     }
-  }, []);
-  console.log(monthOrYear);
+  }, [ariaArrow?.customSelectMonth, ariaArrow?.customSelectYear, type]);
+  const monthsNames = getMonthsNames(formatMonth);
+
   const handleSetCurrent = (e: React.ChangeEvent<HTMLSelectElement>) => {
     console.log(e.target.value);
     console.log(e.currentTarget.value);
     if (type === "month") {
-      onChange(setMonth(value, Number(e.target.value)));
+      let indexMonth = monthsNames.findIndex(({ name }) => {
+        return name.includes(e.currentTarget.value);
+      });
+      console.log(indexMonth);
+      onChange(setMonth(value, indexMonth));
     }
     if (type === "year") {
       onChange(setYear(value, Number(e.target.value)));
     }
   };
-  const monthsNames = getMonthsNames(formatMonth);
 
   let content;
+  let selectValue;
   if (type === "month") {
     content = monthsNames.map((month, i) => {
       const isBeforeMinDate =
@@ -102,7 +107,10 @@ const CustomSelect2 = ({
         maxDate !== undefined
           ? isAfter(setMonth(value, Number(month.numberIndexMonth)), maxDate)
           : false;
-      const isSameMonth = month.name === monthOrYear;
+      if (month.name === monthOrYear) {
+        selectValue = month.name;
+      }
+      // Number(month.numberIndexMonth) - 1
       return (
         <SOptionCustomSelect
           key={uuid()}
@@ -111,8 +119,7 @@ const CustomSelect2 = ({
           secondarycolor={secondarycolor}
           data-testid={"month-button"}
           tabIndex={0}
-          value={Number(month.numberIndexMonth) - 1}
-          selected={isSameMonth}
+          value={month.name}
         >
           {month.name}
         </SOptionCustomSelect>
@@ -126,8 +133,9 @@ const CustomSelect2 = ({
     );
 
     content = array.map((year) => {
-      const isSameYear = year === Number(monthOrYear);
-
+      if (year === Number(monthOrYear)) {
+        selectValue = year;
+      }
       return (
         <SOptionCustomSelect
           key={uuid()}
@@ -135,14 +143,13 @@ const CustomSelect2 = ({
           secondarycolor={secondarycolor}
           data-testid={"year-button"}
           tabIndex={0}
-          selected={isSameYear}
+          value={year}
         >
           {year}
         </SOptionCustomSelect>
       );
     });
   }
-
   return (
     <StyledCustomSelectContainer>
       <StyledCustomSelect
@@ -151,6 +158,7 @@ const CustomSelect2 = ({
         onChange={(e) => handleSetCurrent(e)}
         aria-label={accessibility}
         data-testid={testId}
+        value={monthOrYear}
       >
         {content}
       </StyledCustomSelect>

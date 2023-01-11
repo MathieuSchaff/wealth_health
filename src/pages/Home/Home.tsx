@@ -1,6 +1,6 @@
 import styled from "styled-components";
 import Header from "../../components/Header/Header";
-import Form from "../../components/ZodForm/ZodForm";
+import Form from "../../components/Form/Form";
 
 const SHome = styled.main`
   display: flex;

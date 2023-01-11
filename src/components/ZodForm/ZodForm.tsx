@@ -153,7 +153,6 @@ const Form = ({ onsubmit }: { onsubmit?: () => void }) => {
       {zo.errors.lastName((e) => (
         <ErrorMessage message={e.message} role="alert" />
       ))}
-      <FutureError>Test error</FutureError>
       <LabelTop htmlFor="dateOfBirth">
         Date of birth
         <DatePicker

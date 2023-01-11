@@ -23,7 +23,7 @@ import { InputForm } from "../Form/form.styled";
 import uuid from "react-uuid";
 import { fr, enUS } from "date-fns/locale";
 import { AriaLabels } from "../../App";
-setDefaultOptions({ locale: enUS });
+setDefaultOptions({ locale: fr });
 const DatePicker = ({
   id,
   minDate,

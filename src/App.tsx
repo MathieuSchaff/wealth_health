@@ -1,11 +1,12 @@
-import { Link, Route, Routes } from "react-router-dom";
+import { Route, Routes } from "react-router-dom";
 import Home from "./pages/Home/Home";
 import Users from "./pages/Users/Users";
 import styled from "styled-components";
 import { GlobalStyle } from "./utils/GlobalStyle";
 import { ThemeProvider } from "styled-components";
 import { theme } from "./utils/theme";
-import React from "react";
+import DatePicker from "./components/DatePicker/DatePicker";
+import { useState } from "react";
 // if (!("indexedDB" in window)) {
 //   console.log("This browser doesn't support IndexedDB");
 // }
@@ -68,16 +69,34 @@ const ariaLabels = {
     customSelectYear: "select another year",
   },
 };
+export const FORMAT_OF_DATE = "yyyy-MM-dd";
+
 function App() {
+  const [selectedDate, setSelectedDate] = useState<Date>(new Date());
+
   return (
     <ThemeProvider theme={theme}>
       <GlobalStyle />
-      <SApp className="App">
+      <DatePicker
+        aria-label="date of birth of the user"
+        id="dateOfBirth"
+        value={selectedDate}
+        onChange={setSelectedDate}
+        minDate={new Date(2018, 7, 22)}
+        maxDate={new Date(2027, 2, 22)}
+        formatDate={FORMAT_OF_DATE}
+        primarycolor="red"
+        secondarycolor="purple"
+        name={"birthDate"}
+        ariaRequired={true}
+        iso={true}
+      />
+      {/* <SApp className="App">
         <Routes>
           <Route path="/" element={<Home />} />
           <Route path="users" element={<Users />} />
         </Routes>
-      </SApp>
+      </SApp> */}
     </ThemeProvider>
   );
 }
