@@ -24,7 +24,7 @@ import uuid from "react-uuid";
 import { fr, enUS } from "date-fns/locale";
 import { AriaLabels } from "../../App";
 setDefaultOptions({ locale: enUS });
-export const DatePickerFns = ({
+const DatePicker = ({
   id,
   minDate,
   maxDate,
@@ -259,4 +259,4 @@ export const DatePickerFns = ({
   );
 };
 
-export default DatePickerFns;
+export default DatePicker;
