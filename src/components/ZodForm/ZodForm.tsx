@@ -14,7 +14,7 @@ import {
 import { z } from "zod";
 import { useState } from "react";
 import DatePicker from "../DatePicker/DatePicker";
-import { useUsersStore } from "../../zustandStore";
+import { useUsersStore } from "../../store/zustandStore";
 import { format } from "date-fns";
 export const FORMAT_OF_DATE = "yyyy-MM-dd";
 const options = [
