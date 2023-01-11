@@ -1,321 +1,252 @@
-import { useCallback, useLayoutEffect, useMemo, useRef, useState } from "react";
-import { DayName, PickerWrapper } from "../DataPickerFns/styled";
-import { Header } from "../DataPickerFns/styled";
-import { SevenColGrid, DatePickerWrapper } from "../DataPickerFns/styled";
-import { abbrWeekdayNames } from "./dateUtils";
-import uuid from "react-uuid";
-import ButtonDay from "./ButtonDay";
-import CustomSelect from "./CusTomSelect/CustomSelect";
+import React, { useLayoutEffect, useMemo, useRef, useState } from "react";
+import { useOnClickOutside } from "usehooks-ts";
 import {
-  add,
-  differenceInDays,
-  endOfMonth,
   format,
-  setDate,
   startOfMonth,
-  sub,
+  getDaysInMonth,
+  subMonths,
+  addMonths,
+  getISODay,
+  getDay,
+  setDefaultOptions,
 } from "date-fns";
+import HeaderFns from "./Header";
 import {
-  createArrayFromLengthMonth,
-  getFirstDayOfTheMonth,
-  createArrayAfterFromLengthMonth,
-  createArrayBeforeFromLengthMonth,
-} from "./dateUtils";
-import {
-  NavButton,
-  SvgButtonRightYear,
-  SvgButtonRightMonth,
-  SvgButtonLeftYear,
-  SvgButtonLeftMonth,
-} from "../DataPickerFns/styled";
-
-export interface IButtonProps {
-  onClick?: () => void;
-  disabled?: boolean;
-  primarycolor?: string;
-  secondarycolor?: string;
-}
-
-const DatePicker = ({
+  SevenColGrid,
+  DatePickerWrapper,
+  DayName,
+  PickerWrapper,
+} from "./styled";
+import { getWeekDays, previousDaysArray } from "./datepickerUtils";
+import ButtonDay from "./ButtonDayStyled";
+import { InputForm } from "../Form/form.styled";
+import uuid from "react-uuid";
+import { fr, enUS } from "date-fns/locale";
+import { AriaLabels } from "../../App";
+setDefaultOptions({ locale: enUS });
+export const DatePickerFns = ({
   id,
   minDate,
   maxDate,
   primarycolor,
   secondarycolor,
-  tertiarycolor,
   onChange,
-  selectedDate,
+  value,
   placeholder,
+  formatDate,
+  name,
+  ariaRequired,
+  iso = false,
+  formatDay,
+  formatMonth,
+  formatYear,
+  arialabels,
 }: {
   id: string;
+  value: Date;
+  onChange: React.Dispatch<React.SetStateAction<Date>>;
   primarycolor?: string;
   secondarycolor?: string;
-  tertiarycolor?: string;
   minDate?: Date;
   maxDate?: Date;
-  selectedDate: string;
-  onChange: (date: string) => void;
   placeholder?: string;
+  formatDate: string;
+  name: string;
+  ariaRequired?: boolean;
+  iso?: boolean;
+  formatDay?: string;
+  formatMonth?: string;
+  formatYear?: string;
+  arialabels?: AriaLabels;
 }) => {
   const [isOpen, setIsOpen] = useState<boolean>(false);
+  const containerRefModal = useRef<HTMLDivElement>(null);
+  const container = useRef(null);
+
+  // the value of the input
+  const [inputText, setInputText] = useState<string>("");
+  // will get the name of the days ( depending on the locale)
+  const weekDays = getWeekDays(formatDay);
+  // will get the the first date of the month ( type: Date)
+  const startDateOfMonth = startOfMonth(value);
+
+  const numberOfDaysInMonth = getDaysInMonth(value);
+  // console.log("numberOfDaysInMonth", numberOfDaysInMonth);
+  // SAME VALUES
+  const indexOfFirstDayInWeek = useMemo(() => {
+    if (iso) {
+      // GET ISO DAY from 1 -7
+
+      return getISODay(startDateOfMonth) - 1;
+    } else {
+      // GETDAY from 0-6
+
+      return getDay(startDateOfMonth);
+    }
+  }, [iso, startDateOfMonth]);
+
+  /////////////////////
+  const suffixDays = 42 - numberOfDaysInMonth - indexOfFirstDayInWeek;
+
+  const rangePrefix = previousDaysArray(
+    getDaysInMonth(subMonths(value, 1)) - indexOfFirstDayInWeek,
+    getDaysInMonth(subMonths(value, 1))
+  );
+
   const [height, setHeight] = useState<number>(0);
-  const containerRef = useRef<HTMLDivElement>(null);
-  // allow to set the height of the container ( useful to render a children height un the CustomSelect component)
   useLayoutEffect(() => {
-    if (containerRef) {
-      setHeight(containerRef?.current?.clientHeight as number);
+    if (containerRefModal) {
+      setHeight(containerRefModal?.current?.clientHeight as number);
     }
   }, [isOpen]);
-  const [currentMonth, setCurrentMonth] = useState<number>(
-    new Date().getMonth()
-  );
-  const [currentYear, setCurrentYaer] = useState<number>(
-    new Date().getFullYear()
-  );
 
-  const nextMonth = useCallback(() => {
-    if (currentMonth < 11) {
-      setCurrentMonth((old) => old + 1);
-    } else {
-      setCurrentMonth(0);
-      setCurrentYaer((old) => old + 1);
-    }
-  }, [currentMonth]);
-  const prevMonth = useCallback(() => {
-    if (currentMonth > 0) {
-      setCurrentMonth((old) => old - 1);
-    } else {
-      setCurrentMonth(11);
-      setCurrentYaer((old) => old - 1);
-    }
-  }, [currentMonth]);
-
-  const nextYear = useCallback(() => {
-    setCurrentYaer((old) => old + 1);
-  }, []);
-  const prevYear = useCallback(() => {
-    setCurrentYaer((old) => old - 1);
-  }, []);
-
-  // set the selected date
-  const handleCalendarSelection = (
-    year: number,
-    month: number,
-    day: number
-  ): void => {
-    console.log("ENTER HANDLE selection");
-
-    onChange(new Date(year, month, day).toDateString());
-    setIsOpen(false);
-  };
-  /**
-   *  For this function we want:
-   * to get the time of the state in milliseconds to compare
-   * it with the minDate or maxDate argument passed to the component
-   * @param day
-   * @returns
-   */
-  const getTimeFromState = (_day: number) => {
-    return new Date(currentYear, currentMonth, _day).getTime();
-  };
-  const firstDayOfMonth = useMemo(
-    () => getFirstDayOfTheMonth(currentYear, currentMonth),
-    [currentMonth, currentYear]
-  );
-
-  // get the days of the current month
-  const days = createArrayFromLengthMonth(currentYear, currentMonth);
-
-  // get the days of the previous month
-  const previousDays = createArrayBeforeFromLengthMonth(
-    currentYear,
-    currentMonth,
-    firstDayOfMonth
-  );
-
-  // get the days of the next month
-  const nextDays = createArrayAfterFromLengthMonth(
-    currentYear,
-    currentMonth,
-    previousDays.length + days.length
-  );
   const handleInputChange = (e: { target: { value: any } }) => {
-    console.log("ENTER HANDLE INPUT CHANGE");
-    onChange(e.target.value);
+    setInputText(e.target.value);
   };
   const handleKeyDown = (event: React.KeyboardEvent<HTMLInputElement>) => {
-    console.log("enter keydown");
-    if (event.code === "Enter") {
-      const newDate = new Date(selectedDate);
-      // check if the corresponding value that is typed in the input can be converted to a valid Date object
-      if (newDate instanceof Date && !isNaN(newDate.getTime())) {
-        // if valid , set the selected to be the date entered
-        onChange(newDate.toDateString());
-      } else {
-        // if invalid set the current date to an empty string
-        onChange("");
-        console.log("not a date");
-      }
+    if (
+      event.code === "Enter" ||
+      event.code === "NumpadEnter" ||
+      event.code === "Escape"
+    ) {
+      handleSetValueDate();
     }
   };
-
+  // used when click outside of the or when enter is pressed inside the input
+  const handleSetValueDate = () => {
+    // if the calendar is not displayed , then no need to set any date => return
+    if (!isOpen) {
+      return;
+    }
+    // create an new Date with the text of the input
+    const newDate = new Date(inputText);
+    // check new Date is a valid datez
+    if (newDate instanceof Date && !isNaN(newDate.getTime())) {
+      // will set the input text manually to be to the good format ( if format is desired)
+      setInputText(format(newDate, formatDate));
+      // will change the state declared outside of the component
+      onChange(newDate);
+    } else {
+      // if invalid set text input to the date of the day
+      setInputText(format(new Date(), formatDate));
+      //date to an empty string ????
+      // setInputText("");
+      //set the higher state to be the date of the day
+      onChange(new Date());
+    }
+    setIsOpen(false);
+  };
+  const handleClick = () => {
+    if (!isOpen) {
+      setIsOpen(true);
+    }
+  };
+  useOnClickOutside(container, handleSetValueDate);
   return (
-    <DatePickerWrapper>
-      <>
-        <p>
-          <strong>Selected Date: </strong>
-          {format(new Date(), "dd LLLL yyyy")}
-        </p>
-        <input
-          type="text"
-          id={id}
-          value={selectedDate}
-          onFocus={() => setIsOpen(true)}
-          onChange={handleInputChange}
-          onKeyDown={handleKeyDown}
-          placeholder={placeholder}
-        />
-      </>
+    <DatePickerWrapper ref={container}>
+      <InputForm
+        type="text"
+        id={id}
+        value={inputText}
+        onChange={handleInputChange}
+        onFocus={() => setIsOpen(true)}
+        onKeyDown={handleKeyDown}
+        placeholder={placeholder}
+        onClick={handleClick}
+        name={name}
+        role="combobox"
+        aria-expanded={isOpen}
+        aria-haspopup="dialog"
+        aria-label={arialabels?.input ?? "date of birth of the user"}
+        aria-required={ariaRequired}
+        aria-autocomplete="none"
+      />
       {isOpen && (
-        <PickerWrapper ref={containerRef} primarycolor={primarycolor}>
-          <Header>
-            <NavButton
-              onClick={prevYear}
-              disabled={
-                minDate !== undefined
-                  ? minDate?.getTime() > getTimeFromState(1)
-                  : false
-              }
-              primarycolor={primarycolor}
-              secondarycolor={secondarycolor}
-            >
-              <SvgButtonLeftYear
-                primarycolor={primarycolor}
-                secondarycolor={secondarycolor}
-              />
-            </NavButton>
-            <NavButton
-              onClick={prevMonth}
-              disabled={
-                minDate !== undefined
-                  ? minDate?.getTime() > getTimeFromState(1)
-                  : false
-              }
-              primarycolor={primarycolor}
-              secondarycolor={secondarycolor}
-            >
-              <SvgButtonLeftMonth
-                primarycolor={primarycolor}
-                secondarycolor={secondarycolor}
-              />
-            </NavButton>
-            <CustomSelect
-              currentMonths={currentMonth}
-              currentYaer={currentYear}
-              type="month"
-              setCurrent={setCurrentMonth}
-              heightContainer={height}
-              minDate={minDate}
-              maxDate={maxDate}
-            />
-            <CustomSelect
-              currentMonths={currentMonth}
-              currentYaer={currentYear}
-              type="year"
-              setCurrent={setCurrentYaer}
-              heightContainer={height}
-              minDate={minDate}
-              maxDate={maxDate}
-            />
-
-            <NavButton
-              onClick={nextMonth}
-              disabled={
-                maxDate !== undefined
-                  ? maxDate?.getTime() < getTimeFromState(1)
-                  : false
-              }
-              primarycolor={primarycolor}
-              secondarycolor={secondarycolor}
-            >
-              <SvgButtonRightMonth
-                primarycolor={primarycolor}
-                secondarycolor={secondarycolor}
-              />
-            </NavButton>
-            <NavButton
-              onClick={nextYear}
-              disabled={
-                maxDate !== undefined
-                  ? maxDate?.getTime() < getTimeFromState(1)
-                  : false
-              }
-              primarycolor={primarycolor}
-              secondarycolor={secondarycolor}
-            >
-              <SvgButtonRightYear
-                primarycolor={primarycolor}
-                secondarycolor={secondarycolor}
-              />
-            </NavButton>
-          </Header>
+        <PickerWrapper
+          ref={containerRefModal}
+          aria-modal="true"
+          aria-label="Choose Date"
+          role="dialog"
+        >
+          <HeaderFns
+            value={value}
+            onChange={onChange}
+            minDate={minDate}
+            maxDate={maxDate}
+            height={height}
+            primarycolor={primarycolor}
+            secondarycolor={secondarycolor}
+            formatMonth={formatMonth}
+            ariaArrow={arialabels?.ariaArrow}
+            formatYear={formatYear}
+          />
           <div>
-            <SevenColGrid>
-              {abbrWeekdayNames.map((day, i) => (
-                <DayName key={i}>{day}</DayName>
+            <SevenColGrid role="grid">
+              {weekDays.map((day) => (
+                <DayName key={day}>{day}</DayName>
               ))}
             </SevenColGrid>
             <SevenColGrid>
-              {firstDayOfMonth !== 0
-                ? previousDays.map((dayObj) => {
-                    return (
-                      <ButtonDay
-                        key={uuid()}
-                        handleSelection={handleCalendarSelection}
-                        date={{
-                          year: dayObj.year,
-                          month: dayObj.month,
-                          day: dayObj.day,
-                        }}
-                        selectedDate={selectedDate}
-                        primarycolor={primarycolor}
-                        secondarycolor={secondarycolor}
-                      >
-                        {dayObj.day}
-                      </ButtonDay>
-                    );
-                  })
-                : null}
-              {days.map((day) => {
+              {rangePrefix.map((day) => {
                 return (
                   <ButtonDay
                     key={uuid()}
-                    handleSelection={handleCalendarSelection}
-                    date={{ year: currentYear, month: currentMonth, day: day }}
-                    selectedDate={selectedDate}
+                    onChange={onChange}
+                    value={subMonths(value, 1)}
                     primarycolor={primarycolor}
                     secondarycolor={secondarycolor}
+                    dayNumber={day}
+                    mainArray={false}
+                    setIsOpen={setIsOpen}
+                    setInputText={setInputText}
+                    formatDate={formatDate}
+                    minDate={minDate}
+                    maxDate={maxDate}
                   >
                     {day}
                   </ButtonDay>
                 );
               })}
-              {previousDays.length + days.length < 42
-                ? nextDays.map((dayObj) => {
+              {Array.from({ length: numberOfDaysInMonth }).map((_, index) => {
+                const date = index + 1;
+                return (
+                  <ButtonDay
+                    key={uuid()}
+                    onChange={onChange}
+                    value={value}
+                    primarycolor={primarycolor}
+                    secondarycolor={secondarycolor}
+                    dayNumber={date}
+                    mainArray={true}
+                    setIsOpen={setIsOpen}
+                    setInputText={setInputText}
+                    formatDate={formatDate}
+                    minDate={minDate}
+                    maxDate={maxDate}
+                  >
+                    {date}
+                  </ButtonDay>
+                );
+              })}
+              {suffixDays > 0
+                ? Array.from({ length: suffixDays }).map((_, index) => {
+                    const date = index + 1;
                     return (
                       <ButtonDay
                         key={uuid()}
-                        handleSelection={handleCalendarSelection}
-                        date={{
-                          year: dayObj.year,
-                          month: dayObj.month,
-                          day: dayObj.day,
-                        }}
-                        selectedDate={selectedDate}
+                        onChange={onChange}
+                        value={addMonths(value, 1)}
                         primarycolor={primarycolor}
                         secondarycolor={secondarycolor}
+                        dayNumber={date}
+                        mainArray={false}
+                        setIsOpen={setIsOpen}
+                        setInputText={setInputText}
+                        formatDate={formatDate}
+                        minDate={minDate}
+                        maxDate={maxDate}
                       >
-                        {dayObj.day}
+                        {date}
                       </ButtonDay>
                     );
                   })
@@ -328,4 +259,4 @@ const DatePicker = ({
   );
 };
 
-export default DatePicker;
+export default DatePickerFns;

@@ -1,9 +1,20 @@
-import React, { useCallback, useState, useRef } from "react";
-import { StyledCustomSelectContainer, StyledCustomSelect } from "./styled";
-import { monthsNnames } from "../dateUtils";
+import React, { useMemo } from "react";
+import {
+  StyledCustomSelectContainer,
+  StyledCustomSelect,
+  SOptionCustomSelect,
+} from "./styleCustomSelect";
 import uuid from "react-uuid";
-import { useOnClickOutside } from "usehooks-ts";
-import { abbrMonthsNames } from "../dateUtils";
+import { format, isAfter, isBefore, setMonth, setYear } from "date-fns";
+import { getMonthsNames } from "../datepickerUtils";
+import { IArrowHeaderAria } from "../../../App";
+export interface IButtonSelect {
+  key: string;
+  onClick: (monthOrYaer: number) => void;
+  disabled?: boolean;
+  primarycolor?: string;
+  secondarycolor?: string;
+}
 
 /**
  * This function is the month or the yaer.
@@ -18,124 +29,133 @@ import { abbrMonthsNames } from "../dateUtils";
  * @param {Date} props.maxDate - The max date
  * @returns
  */
-const CustomSelect = ({
-  currentMonths,
-  currentYaer,
+const CustomSelect2 = ({
+  value,
   type,
-  heightContainer,
-  setCurrent,
+  height,
   minDate,
   maxDate,
+  onChange,
+  primarycolor,
+  secondarycolor,
+  formatMonth,
+  formatYear,
+  ariaArrow,
 }: {
-  currentMonths: number;
-  currentYaer: number;
+  value: Date;
   maxDate?: Date;
   minDate?: Date;
-  setCurrent: React.Dispatch<React.SetStateAction<number>>;
-  heightContainer: number;
+  onChange: React.Dispatch<React.SetStateAction<Date>>;
+  height: number;
   type: "year" | "month";
+  primarycolor?: string;
+  secondarycolor?: string;
+  formatMonth?: string;
+  formatYear?: string;
+
+  ariaArrow?: IArrowHeaderAria;
 }) => {
-  const ref = useRef<HTMLDivElement>(null);
-  const [isOpen, setIsOpen] = useState<boolean>(false);
-  const toggleOpen = useCallback(() => {
-    setIsOpen((prev) => !prev);
+  // I want to set the value of the higher state to be the month click or the year clicked
+
+  let monthOrYear = useMemo(() => {
+    if (type === "month") {
+      return format(value, formatMonth ?? "LLL");
+    } else {
+      return format(value, formatYear ?? "yyy");
+    }
+  }, [formatMonth, formatYear, type, value]);
+  let testId = useMemo(() => {
+    if (type === "month") {
+      return "monthSelect";
+    } else {
+      return "yearSelect";
+    }
   }, []);
-
-  const handleClickOutside = () => {
-    console.log("clicked outside");
-    toggleOpen();
+  let accessibility = useMemo(() => {
+    if (type === "month") {
+      return ariaArrow?.customSelectMonth ?? "select another month";
+    } else {
+      return ariaArrow?.customSelectYear ?? "select another year";
+    }
+  }, []);
+  console.log(monthOrYear);
+  const handleSetCurrent = (e: React.ChangeEvent<HTMLSelectElement>) => {
+    console.log(e.target.value);
+    console.log(e.currentTarget.value);
+    if (type === "month") {
+      onChange(setMonth(value, Number(e.target.value)));
+    }
+    if (type === "year") {
+      onChange(setYear(value, Number(e.target.value)));
+    }
   };
-
-  const handleSetCurrent = (monthOrYaer: number) => {
-    setCurrent(monthOrYaer);
-    console.log(monthOrYaer);
-    toggleOpen();
-  };
+  const monthsNames = getMonthsNames(formatMonth);
 
   let content;
   if (type === "month") {
-    content = monthsNnames.map((month, monthIndex) => {
-      // It depends on the year selected it's why I used new Date and not just month and minDate.getMonth()
-      // if the time in milliseconds of the month we will be able to select is inferior to the  to the minimum time ( milliseconds) passed
-      // the button will be disabled
-
-      if (
-        minDate &&
-        new Date(currentYaer, monthIndex + 1).getTime() < minDate?.getTime()
-      ) {
-        return (
-          <button key={uuid()} disabled={true}>
-            {month}
-          </button>
-        );
-      }
-      // if the time in milliseconds of the month we will be able to select is superior to the  to the maximum time ( milliseconds) passed
-      // the button will be disabled
-      if (
-        maxDate &&
-        new Date(currentYaer, monthIndex + 1, 0).getTime() > maxDate?.getTime()
-      ) {
-        return (
-          <button key={uuid()} disabled={true}>
-            {month}
-          </button>
-        );
-      }
-      // it will render the button inside and this button will allow to select a month
-      // only if the time of the month  ( in milliseconds, so depending on the year)
+    content = monthsNames.map((month, i) => {
+      const isBeforeMinDate =
+        minDate !== undefined
+          ? isBefore(setMonth(value, Number(month.numberIndexMonth)), minDate)
+          : false;
+      const isAfterDate =
+        maxDate !== undefined
+          ? isAfter(setMonth(value, Number(month.numberIndexMonth)), maxDate)
+          : false;
+      const isSameMonth = month.name === monthOrYear;
       return (
-        <button key={uuid()} onClick={() => handleSetCurrent(monthIndex)}>
-          {month}
-        </button>
+        <SOptionCustomSelect
+          key={uuid()}
+          disabled={isBeforeMinDate || isAfterDate}
+          primarycolor={primarycolor}
+          secondarycolor={secondarycolor}
+          data-testid={"month-button"}
+          tabIndex={0}
+          value={Number(month.numberIndexMonth) - 1}
+          selected={isSameMonth}
+        >
+          {month.name}
+        </SOptionCustomSelect>
       );
     });
   } else {
-    let end = 2045;
-    let start = 1900;
+    let end = maxDate ? Number(format(maxDate, "yyyy")) : 2045;
+    let start = minDate ? Number(format(minDate, "yyyy")) : 1900;
     let array = Array.from(Array(end - start).keys()).map(
       (x: number) => x + start
     );
 
     content = array.map((year) => {
-      // if the year of the future button is superior to the max date the button will be disable
-      if (maxDate && year > maxDate?.getFullYear()) {
-        return (
-          <button key={uuid()} disabled>
-            {year}
-          </button>
-        );
-      }
-      // if the year of the future button is inferior to the min date the button will be disable
+      const isSameYear = year === Number(monthOrYear);
 
-      if (minDate && year < minDate?.getFullYear()) {
-        return (
-          <button key={uuid()} disabled>
-            {year}
-          </button>
-        );
-      }
-      // it will render the button inside and this button will allow to select a year
       return (
-        <button key={uuid()} onClick={() => handleSetCurrent(year)}>
+        <SOptionCustomSelect
+          key={uuid()}
+          primarycolor={primarycolor}
+          secondarycolor={secondarycolor}
+          data-testid={"year-button"}
+          tabIndex={0}
+          selected={isSameYear}
+        >
           {year}
-        </button>
+        </SOptionCustomSelect>
       );
     });
   }
-  console.log(heightContainer);
-  useOnClickOutside(ref, handleClickOutside);
+
   return (
     <StyledCustomSelectContainer>
-      <p onClick={() => toggleOpen()}>
-        {type === "month" ? abbrMonthsNames[currentMonths] : currentYaer}
-      </p>
-      {isOpen && (
-        <StyledCustomSelect heightContainer={heightContainer} ref={ref}>
-          {content}
-        </StyledCustomSelect>
-      )}
+      <StyledCustomSelect
+        heightContainer={height}
+        id={`${type}_dropdown`}
+        onChange={(e) => handleSetCurrent(e)}
+        aria-label={accessibility}
+        data-testid={testId}
+      >
+        {content}
+      </StyledCustomSelect>
     </StyledCustomSelectContainer>
   );
 };
 
-export default CustomSelect;
+export default CustomSelect2;

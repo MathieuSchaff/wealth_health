@@ -2,6 +2,24 @@
   "name": "wealth_healt",
   "version": "0.1.0",
   "private": true,
+  "jest": {
+    "collectCoverageFrom": [
+      "src/**/*.{js,jsx,ts,tsx}",
+      "!<rootDir>/node_modules/",
+      "!<rootDir>/path/to/dir/"
+    ],
+    "coverageThreshold": {
+      "global": {
+        "branches": 90,
+        "functions": 90,
+        "lines": 90,
+        "statements": 90
+      }
+    },
+    "coverageReporters": [
+      "text"
+    ]
+  },
   "dependencies": {
     "@hookform/resolvers": "^2.9.10",
     "@reduxjs/toolkit": "^1.9.1",
@@ -9,7 +27,6 @@
     "@tanstack/react-table": "^8.7.4",
     "@testing-library/jest-dom": "^5.16.5",
     "@testing-library/react": "^13.4.0",
-    "@testing-library/user-event": "^13.5.0",
     "@types/jest": "^27.5.2",
     "@types/node": "^16.18.7",
     "@types/react": "^18.0.26",
@@ -59,7 +76,12 @@
     ]
   },
   "devDependencies": {
+    "@axe-core/react": "^4.5.2",
+    "@testing-library/user-event": "^14.4.3",
     "@types/styled-components": "^5.1.26",
-    "jest-styled-components": "^7.1.1"
+    "eslint": "^8.31.0",
+    "eslint-plugin-jsx-a11y": "^6.6.1",
+    "jest-styled-components": "^7.1.1",
+    "react-select-event": "^5.5.1"
   }
 }

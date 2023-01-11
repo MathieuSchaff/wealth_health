@@ -1,6 +1,6 @@
 import React from "react";
 import {
-  Header,
+  SHeader,
   NavButton,
   SvgButtonRightMonth,
   SvgButtonLeftMonth,
@@ -15,8 +15,9 @@ import {
   isBefore,
   isAfter,
 } from "date-fns";
-import CustomSelect from "./CustomSelectFns";
-const HeaderFns = ({
+import CustomSelect from "./CustomSelect/CustomSelect";
+import { IArrowHeaderAria } from "../../App";
+const Header = ({
   value,
   onChange,
   minDate,
@@ -24,6 +25,9 @@ const HeaderFns = ({
   height,
   primarycolor,
   secondarycolor,
+  formatMonth,
+  formatYear,
+  ariaArrow,
 }: {
   value: any;
   onChange: React.Dispatch<React.SetStateAction<Date>>;
@@ -32,6 +36,10 @@ const HeaderFns = ({
   height: number;
   primarycolor?: string;
   secondarycolor?: string;
+  formatMonth?: string;
+  formatYear?: string;
+
+  ariaArrow?: IArrowHeaderAria;
 }) => {
   const prevMonth = () => {
     onChange(subMonths(value, 1));
@@ -47,7 +55,7 @@ const HeaderFns = ({
   };
 
   return (
-    <Header>
+    <SHeader>
       <NavButton
         onClick={prevYear}
         disabled={
@@ -55,6 +63,9 @@ const HeaderFns = ({
         }
         primarycolor={primarycolor}
         secondarycolor={secondarycolor}
+        type="button"
+        data-testid="prev-year"
+        aria-label={ariaArrow?.prevYear ?? "go to previous year"}
       >
         <SvgButtonLeftYear />
       </NavButton>
@@ -65,6 +76,9 @@ const HeaderFns = ({
         }
         primarycolor={primarycolor}
         secondarycolor={secondarycolor}
+        type="button"
+        data-testid="prev-month"
+        aria-label={ariaArrow?.prevMonth ?? "go to previous month"}
       >
         <SvgButtonLeftMonth />
       </NavButton>
@@ -77,6 +91,9 @@ const HeaderFns = ({
         maxDate={maxDate}
         primarycolor={primarycolor}
         secondarycolor={secondarycolor}
+        formatMonth={formatMonth}
+        ariaArrow={ariaArrow}
+        formatYear={formatYear}
       />
       <CustomSelect
         value={value}
@@ -87,6 +104,8 @@ const HeaderFns = ({
         maxDate={maxDate}
         primarycolor={primarycolor}
         secondarycolor={secondarycolor}
+        ariaArrow={ariaArrow}
+        formatYear={formatYear}
       />
 
       <NavButton
@@ -94,6 +113,9 @@ const HeaderFns = ({
         disabled={maxDate !== undefined && isAfter(value, maxDate)}
         primarycolor={primarycolor}
         secondarycolor={secondarycolor}
+        type="button"
+        data-testid="next-month"
+        aria-label={ariaArrow?.nextMonth ?? "go to next month"}
       >
         <SvgButtonRightMonth />
       </NavButton>
@@ -102,11 +124,14 @@ const HeaderFns = ({
         disabled={maxDate !== undefined && isAfter(addYears(value, 1), maxDate)}
         primarycolor={primarycolor}
         secondarycolor={secondarycolor}
+        type="button"
+        data-testid="next-year"
+        aria-label={ariaArrow?.nextYear ?? "go to next year"}
       >
         <SvgButtonRightYear />
       </NavButton>
-    </Header>
+    </SHeader>
   );
 };
 
-export default HeaderFns;
+export default Header;

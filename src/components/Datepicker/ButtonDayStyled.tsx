@@ -45,7 +45,7 @@ const ButtonDay = ({
   mainArray,
   setIsOpen,
   setInputText,
-  isoFormat,
+  formatDate,
   minDate,
   maxDate,
 }: {
@@ -58,7 +58,7 @@ const ButtonDay = ({
   dayNumber: number;
   setIsOpen: React.Dispatch<React.SetStateAction<boolean>>;
   setInputText: React.Dispatch<React.SetStateAction<string>>;
-  isoFormat: string;
+  formatDate: string;
   minDate?: Date;
   maxDate?: Date;
 }) => {
@@ -67,7 +67,7 @@ const ButtonDay = ({
   const activeClass = sameDay ? "active" : "";
   const handleClick = () => {
     onChange(myDay);
-    setInputText(format(myDay, isoFormat));
+    setInputText(format(myDay, formatDate));
     setIsOpen(false);
   };
   // so if myDay is before minDate => will return true
@@ -87,6 +87,7 @@ const ButtonDay = ({
       primarycolor={primarycolor}
       secondarycolor={secondarycolor}
       disabled={isBetWeen}
+      aria-selected={sameDay}
     >
       {children}
     </ButtonDayStyled>

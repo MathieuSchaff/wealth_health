@@ -1,12 +1,12 @@
 import create from "zustand";
-
-import type { FormSchema } from "./components/ZodForm.tsx/ZodForm";
+import { defaultData } from "./components/Table/fakeData";
+import { FormatedDataType } from "./components/Table/fakeData";
 export const useUsersStore = create<{
-  user: FormSchema | null;
-  users: FormSchema[];
-  addOneUser: (user: FormSchema) => void;
+  user: FormatedDataType | null;
+  users: FormatedDataType[];
+  addOneUser: (user: FormatedDataType) => void;
 }>((set) => ({
-  users: [],
+  users: defaultData,
   user: null,
   addOneUser: (user) => set((state) => ({ users: [...state.users, user] })),
 }));

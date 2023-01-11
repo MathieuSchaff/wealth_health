@@ -7,19 +7,19 @@ import {
   endOfYear,
   eachMonthOfInterval,
 } from "date-fns";
-import { number } from "zod";
+
 /**
  *
- * @param locale .specifies the language and region to use for the formatting
+ * @param formatDay .specifies the language and region to use for the formatting
  * @returns
  */
-export const getWeekDays = (): string[] => {
+export const getWeekDays = (formatDay = "EEE"): string[] => {
   const now = new Date();
   const weekDays: string[] = [];
   const start = startOfWeek(now);
   const end = endOfWeek(now);
   eachDayOfInterval({ start, end }).forEach((day) => {
-    weekDays.push(format(day, "EEE"));
+    weekDays.push(format(day, formatDay));
   });
   return weekDays;
 };
@@ -27,14 +27,14 @@ interface IMonthFormated {
   name: string;
   numberIndexMonth: string;
 }
-export const getMonthsNames = (): IMonthFormated[] => {
+export const getMonthsNames = (formatMonth = "LLLL"): IMonthFormated[] => {
   const now = new Date();
   const monthsYear: IMonthFormated[] = [];
   const start = startOfYear(now);
   const end = endOfYear(now);
   eachMonthOfInterval({ start, end }).forEach((month) => {
     monthsYear.push({
-      name: format(month, "LLLL"),
+      name: format(month, formatMonth),
       numberIndexMonth: format(month, "M"),
     });
   });

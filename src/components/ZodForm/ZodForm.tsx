@@ -1,4 +1,5 @@
 import { useZorm } from "react-zorm";
+import styled from "styled-components";
 import {
   ButtonSubmit,
   InputForm,
@@ -9,8 +10,7 @@ import {
   LabelFieldSet,
   LabelTop,
   StyledSelect,
-  StyledErrorMessage,
-} from "./form.styled";
+} from "../Form/form.styled";
 import { z } from "zod";
 import { useState } from "react";
 import DatePicker from "../DatePicker/DatePicker";
@@ -25,7 +25,7 @@ const options = [
   { value: "Legal", label: "Legal" },
 ];
 function ErrorMessage(props: { message: string; role: string }) {
-  return <StyledErrorMessage>{props.message}</StyledErrorMessage>;
+  return <div>{props.message}</div>;
 }
 
 export const FormSchema = z.object({
@@ -62,7 +62,9 @@ export const FormSchema = z.object({
     .transform(Number),
   department: z.string().min(1),
 });
-
+const FutureError = styled.div`
+  color: ${({ theme }) => theme.colors.errorColor};
+`;
 // eslint-disable-next-line @typescript-eslint/no-redeclare
 export type FormSchema = z.infer<typeof FormSchema>;
 export interface FormProps {
@@ -151,6 +153,7 @@ const Form = ({ onsubmit }: { onsubmit?: () => void }) => {
       {zo.errors.lastName((e) => (
         <ErrorMessage message={e.message} role="alert" />
       ))}
+      <FutureError>Test error</FutureError>
       <LabelTop htmlFor="dateOfBirth">
         Date of birth
         <DatePicker

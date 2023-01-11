@@ -1,11 +1,32 @@
+import { createGlobalStyle, DefaultTheme } from "styled-components";
+
+export const GlobalStyle = createGlobalStyle<{ theme: DefaultTheme }>`
+html {
+  box-sizing: border-box;
+  font-size: 50%;  // 1rem = 8px; 8/16 = 50%
+  @media (min-width: 768px) {
+    // width 768px  ?
+    font-size: 56.25%; // 1rem = 9px; 9/16 = 56.25%
+  }
+  @media (min-width: 1200px) {
+    font-size: 62.5%; // 1rem = 10px; 8/16 = 62.5%
+  }
+  @media (min-width: 1800px) {
+    // width > 1800 ?
+    font-size: 75%; // 1rem = 12px; 12/16 = 75%
+  }
+}
 body {
-  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", "Roboto", "Oxygen",
-    "Ubuntu", "Cantarell", "Fira Sans", "Droid Sans", "Helvetica Neue",
-    sans-serif;
+  font-family: Oswald, sans-serif;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
+  color: ${(props) => props.theme.colors.fontColor};
+  border: 2px solid ${(props) => props.theme.colors.secondary};
+  background: ${(props) => props.theme.colors.backgroundLight};
+  min-height: 100vh;
+  margin: 0;
+  font-size: 2rem;
 }
-
 code {
   font-family: source-code-pro, Menlo, Monaco, Consolas, "Courier New",
     monospace;
@@ -15,8 +36,6 @@ code {
   margin: 0;
   padding: 0;
   border: 0;
-  font-size: 100%;
-  font: inherit;
   vertical-align: baseline;
   line-height: calc(1em + 0.5rem);
 }
@@ -39,12 +58,13 @@ nav,
 section {
   display: block;
 }
-body {
-  line-height: 1;
-}
+
 ol,
 ul {
   list-style: none;
+}
+li {
+  list-style-type: none;
 }
 blockquote,
 q {
@@ -60,11 +80,6 @@ q:after {
 table {
   border-collapse: collapse;
   border-spacing: 0;
-}
-
-html,
-body {
-  height: 100%;
 }
 
 img,
@@ -91,3 +106,5 @@ h5,
 h6 {
   overflow-wrap: break-word;
 }
+
+`;

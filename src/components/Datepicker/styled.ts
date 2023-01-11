@@ -1,11 +1,19 @@
 import styled, { css } from "styled-components";
-import type { IButtonProps } from "../Datepicker/DatePicker";
 import { BsChevronDoubleRight } from "react-icons/bs";
 import { BsChevronDoubleLeft } from "react-icons/bs";
 import { BsChevronRight } from "react-icons/bs";
 import { BsChevronLeft } from "react-icons/bs";
 interface IContainerColors {
   readonly primarycolor?: string;
+}
+interface INavButtonProps {
+  onClick: () => void;
+  disabled: boolean;
+  primarycolor?: string;
+  secondarycolor?: string;
+  type: string;
+  ["data-testid"]: string;
+  ["aria-label"]: string;
 }
 export const DatePickerWrapper = styled.div`
   position: relative;
@@ -53,7 +61,7 @@ export const SvgButtonRightMonth = styled(BsChevronRight)<any>`
   ${(props) => svgStyles(props)}
 `;
 // THE BUTTON TO NAGIVATE BACK AND NEXT OF MONTHS / YEARS
-export const NavButton = styled.button<IButtonProps>`
+export const NavButton = styled.button<INavButtonProps>`
   cursor: pointer;
   width: 1.5rem;
   height: 1.5rem;
@@ -72,7 +80,7 @@ export const NavButton = styled.button<IButtonProps>`
   }
 `;
 
-export const Header = styled.header`
+export const SHeader = styled.header`
   display: flex;
   justify-content: space-between;
   align-items: center;

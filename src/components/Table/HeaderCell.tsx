@@ -4,8 +4,10 @@ import {
   SHeaderButton,
   SHeaderContainer,
   STH,
+  StyledArrowHeaderDown,
+  StyledArrowHeaderUp,
 } from "./styledTable";
-import type { FormatedDataType } from "./UsersTable";
+import type { FormatedDataType } from "./fakeData";
 const HeaderCell = ({
   header,
 }: {
@@ -33,22 +35,17 @@ const HeaderCell = ({
         <SHeaderContainer aria-hidden>
           {flexRender(header.column.columnDef.header, header.getContext())}
           <SButtonHeaderContainer>
-            <SHeaderButton
+            <StyledArrowHeaderUp
               onClick={header.column.getToggleSortingHandler()}
               disabled={isDesc}
               role={isSortable ? "button" : undefined}
-            >
-              {" "}
-              🔼
-            </SHeaderButton>
-            <SHeaderButton
+            />
+
+            <StyledArrowHeaderDown
               onClick={header.column.getToggleSortingHandler()}
               disabled={isAsc}
               role={isSortable ? "button" : undefined}
-            >
-              {" "}
-              🔽
-            </SHeaderButton>
+            />
           </SButtonHeaderContainer>
         </SHeaderContainer>
       )}

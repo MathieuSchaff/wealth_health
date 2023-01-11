@@ -1,15 +1,17 @@
 import React from "react";
 import ReactDOM from "react-dom/client";
-import "./index.css";
+import "./utils/GlobalStyle.ts";
 import App from "./App";
 import reportWebVitals from "./reportWebVitals";
-import { store } from "./store/store";
-import { Provider } from "react-redux";
 import { BrowserRouter } from "react-router-dom";
 
 const root = ReactDOM.createRoot(
   document.getElementById("root") as HTMLElement
 );
+if (process.env.NODE_ENV !== "production") {
+  const axe = require("@axe-core/react");
+  axe(React, ReactDOM, 1000);
+}
 root.render(
   <React.StrictMode>
     <BrowserRouter>
