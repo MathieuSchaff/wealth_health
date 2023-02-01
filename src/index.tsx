@@ -4,18 +4,23 @@ import "./utils/GlobalStyle.ts";
 import App from "./App";
 import reportWebVitals from "./reportWebVitals";
 import { BrowserRouter } from "react-router-dom";
-
+import { PersistGate } from "redux-persist/integration/react";
+import { Provider } from "react-redux";
+import { store } from "./store/store";
+import { persistStore } from "redux-persist";
 const root = ReactDOM.createRoot(
   document.getElementById("root") as HTMLElement
 );
-if (process.env.NODE_ENV !== "production") {
-  const axe = require("@axe-core/react");
-  axe(React, ReactDOM, 1000);
-}
+export const persistor = persistStore(store);
+
 root.render(
   <React.StrictMode>
     <BrowserRouter>
-      <App />
+      <Provider store={store}>
+        <PersistGate loading={null} persistor={persistor}>
+          <App />
+        </PersistGate>
+      </Provider>
     </BrowserRouter>
   </React.StrictMode>
 );

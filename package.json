@@ -33,9 +33,8 @@
     "@types/react-dom": "^18.0.9",
     "date-fns": "^2.29.3",
     "react": "^18.2.0",
-    "react-calendar": "^4.0.0",
+    "react-datepicker-ms": "^1.6.0",
     "react-dom": "^18.2.0",
-    "react-hook-form": "^7.40.0",
     "react-icons": "^4.7.1",
     "react-redux": "^8.0.5",
     "react-router-dom": "^6.6.1",
@@ -43,13 +42,12 @@
     "react-select": "^5.7.0",
     "react-uuid": "^2.0.0",
     "react-zorm": "^0.6.1",
+    "redux-persist": "^6.0.0",
     "styled-components": "^5.3.6",
     "typescript": "^4.9.4",
     "usehooks-ts": "^2.9.1",
     "web-vitals": "^2.1.4",
-    "yup": "^0.32.11",
-    "zod": "^3.20.2",
-    "zustand": "^4.1.5"
+    "zod": "^3.20.2"
   },
   "scripts": {
     "start": "react-scripts start",

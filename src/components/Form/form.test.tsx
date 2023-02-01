@@ -1,5 +1,6 @@
 import { fireEvent, render, screen } from "@testing-library/react";
-import Form, { FORMAT_OF_DATE, FormSchema } from "./Form";
+import Form, { FORMAT_OF_DATE } from "./Form";
+import { FormSchemaType } from "./FormSchema";
 import userEvent from "@testing-library/user-event";
 import selectEvent from "react-select-event";
 import { object, string } from "zod";

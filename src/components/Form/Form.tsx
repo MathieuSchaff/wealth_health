@@ -11,12 +11,35 @@ import {
   StyledSelect,
   StyledErrorMessage,
 } from "./form.styled";
-import { z } from "zod";
 import { useState } from "react";
-import DatePicker from "../DatePicker/DatePicker";
-import { useUsersStore } from "../../store/zustandStore";
+import { DatePicker } from "react-datepicker-ms";
 import { format } from "date-fns";
+import { addUser, selectAllUsers } from "../../features/usersSlice";
+import { useAppDispatch, useAppSelector } from "../../store/hooks";
+import { FormSchemaType, FormSchema } from "./FormSchema";
+const ariaLabels = {
+  input: "date of birth of the user",
+  ariaArrow: {
+    prevYear: "go to previous year",
+    prevMonth: "go to previous month",
+    nextMonth: "go to next month",
+    nextYear: "go to next year",
+    customSelectMonth: "select another month",
+    customSelectYear: "select another year",
+  },
+};
+
 export const FORMAT_OF_DATE = "yyyy-MM-dd";
+const styles: any = {
+  primarycolor: "#54a0ff",
+  secondarycolor: "#DB5461",
+  inputStyles: {},
+  headerStyles: {
+    arrowButton: {
+      size: "3rem",
+    },
+  },
+};
 const options = [
   { value: "Sales", label: "Sales" },
   { value: "Marketing", label: "Marketing" },
@@ -28,90 +51,29 @@ function ErrorMessage(props: { message: string; role: string }) {
   return <StyledErrorMessage>{props.message}</StyledErrorMessage>;
 }
 
-export const FormSchema = z.object({
-  firstName: z.string().min(1),
-  lastName: z.string().min(1),
-
-  dateOfBirth: z.preprocess(
-    (arg) => {
-      if (typeof arg == "string" || arg instanceof Date) return new Date(arg);
-    },
-    z
-      .date({
-        required_error: "Please select a date and time",
-        invalid_type_error: "That's not a date!",
-      })
-      .min(new Date(2018, 7, 22), { message: "Too old" })
-      .max(new Date(2027, 2, 22), { message: "Too young!" })
-  ),
-  startDate: z.preprocess(
-    (arg) => {
-      if (typeof arg == "string" || arg instanceof Date) return new Date(arg);
-    },
-    z.date({
-      required_error: "Please select a date and time",
-      invalid_type_error: "That's not a date!",
-    })
-  ),
-  street: z.string().min(1),
-  city: z.string().min(1),
-  state: z.string().min(1),
-  zipCode: z
-    .string()
-    .regex(/^[0-9]+$/)
-    .transform(Number),
-  department: z.string().min(1),
-});
-
-// eslint-disable-next-line @typescript-eslint/no-redeclare
-export type FormSchema = z.infer<typeof FormSchema>;
 export interface FormProps {
-  onSubmit: (formValue: FormSchema) => void;
+  onSubmit: (formValue: FormSchemaType) => void;
 }
 const Form = ({ onsubmit }: { onsubmit?: () => void }) => {
-  const addOneUser = useUsersStore((state) => state.addOneUser);
-  // const users = useUsersStore((state) => state.users);
-
   const [selectedDate, setSelectedDate] = useState<Date>(new Date());
-
+  const users = useAppSelector(selectAllUsers);
+  const dispatch = useAppDispatch();
+  console.log("user", users);
   const zo = useZorm("signup", FormSchema, {
-    onValidSubmit(e) {
+    async onValidSubmit(e) {
       e.preventDefault();
       const dateOfBirth = format(e.data.dateOfBirth, FORMAT_OF_DATE);
       const startDate = format(e.data.startDate, FORMAT_OF_DATE);
-      const newUserWithoutId = {
+      const newUser = {
         ...e.data,
         dateOfBirth,
         startDate,
       };
-      addOneUser(newUserWithoutId);
-      onsubmit?.();
-      // const id = e.data.id ?? crypto.randomUUID();
-      // const newUserWithId = {
-      //   ...e.data,
-      //   id,
-      //   dateOfBirth,
-      //   startDate,
-      // };
+      console.log("e.date", e.data);
 
-      // let tx = db?.transaction("usersStore", "readwrite");
-      // tx.oncomplete = (ev) => {
-      //   console.log(ev);
-      // };
-      // tx.onerror = (err) => {
-      //   console.warn(err);
-      // };
-      // let store = tx.objectStore("usersStore");
-      // store.add(newUserWithId);
-      // request.oncomplete = (ev) => {
-      //   console.log("successefully added obj");
-      // };
-      // request.onerror = (err) => {
-      //   console.warn("error adding obj");
-      // };
+      dispatch(addUser(newUser));
     },
   });
-  // console.log("users", users);
   return (
     <FormStyled
       action="#"
@@ -154,18 +116,15 @@ const Form = ({ onsubmit }: { onsubmit?: () => void }) => {
       <LabelTop htmlFor="dateOfBirth">
         Date of birth
         <DatePicker
-          aria-label="date of birth of the user"
           id="dateOfBirth"
           value={selectedDate}
           onChange={setSelectedDate}
-          minDate={new Date(2018, 7, 22)}
-          maxDate={new Date(2027, 2, 22)}
+          ariaLabels={ariaLabels}
+          styles={styles}
           formatDate={FORMAT_OF_DATE}
-          primarycolor="red"
-          secondarycolor="purple"
           name={zo.fields.dateOfBirth()}
           ariaRequired={true}
-          iso={false}
+          iso={true}
         />
       </LabelTop>
 
@@ -175,17 +134,16 @@ const Form = ({ onsubmit }: { onsubmit?: () => void }) => {
       <LabelTop htmlFor="startDate">
         Start Date
         <DatePicker
-          aria-label="start date of the user in the company"
           id="startDate"
           value={selectedDate}
           onChange={setSelectedDate}
-          minDate={new Date(2018, 7, 22)}
+          ariaLabels={ariaLabels}
+          styles={styles}
           maxDate={new Date(2027, 2, 22)}
           formatDate={FORMAT_OF_DATE}
-          primarycolor="red"
-          secondarycolor="purple"
           name={zo.fields.startDate()}
           ariaRequired={true}
+          iso={true}
         />
       </LabelTop>
 

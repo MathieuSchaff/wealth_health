@@ -35,38 +35,12 @@ export const FormStyled = styled.form`
 export const TitleForm = styled.h2`
   font-weight: bold;
   font-size: 3rem;
+  margin-top: 3rem;
   font-family: "Oswald", sans-serif;
   color: ${({ theme }) => theme.colors.white};
-  margin-top: 5rem;
   margin-bottom: 2rem;
 `;
 
-export const InputForm = styled.input`
-  max-width: 300px;
-  min-width: 250px;
-  padding: 6px;
-  border-style: solid;
-  border-width: 2px;
-  border-color: ${({ theme }) => theme.colors.primary};
-  background-color: #ffffff;
-  color: ${({ theme }) => theme.colors.primary};
-  font-size: ${({ theme }) => theme.fontSize.input};
-  font-weight: 500;
-  border-radius: 6px;
-  box-shadow: 0px 0px 5px rgba(66, 66, 66, 0.75);
-  outline: none;
-  &:hover {
-    outline: none;
-  }
-  &:focus {
-  }
-
-  &::placeholder {
-    font-size: ${({ theme }) => theme.fontSize.input};
-    font-weight: 500;
-    opacity: 0.7;
-  }
-`;
 const BasicLabel = styled.label`
   display: flex;
   flex-direction: column;
@@ -79,7 +53,7 @@ export const LabelTop = styled(BasicLabel)`
 export const LabelFieldSet = styled(BasicLabel)`
   color: ${({ theme }) => theme.colors.primary};
 `;
-export const FieldSetForm = styled.fieldset`
+export const FieldSetForm = styled.div`
   display: flex;
   flex-direction: column;
   margin: 1.2rem 0;
@@ -139,11 +113,15 @@ export const StyledSelect = styled(Select)`
     border-color: ${({ theme }) => theme.colors.primary};
     background-color: #ffffff;
     font-size: ${({ theme }) => theme.fontSize.input};
+    color: ${({ theme }) => theme.colors.primary};
     font-weight: 500;
     border-radius: 6px;
     box-shadow: 0px 0px 5px rgba(66, 66, 66, 0.75);
     outline: none;
     cursor: pointer;
+  }
+  .react-select__single-value {
+    color: ${({ theme }) => theme.colors.primary};
   }
   .react-select__indicator-separator {
     display: none;
@@ -151,4 +129,30 @@ export const StyledSelect = styled(Select)`
 `;
 export const StyledErrorMessage = styled.p`
   color: ${({ theme }) => theme.colors.errorColor};
+`;
+export const InputForm = styled.input`
+  max-width: 300px;
+  min-width: 250px;
+  padding: 8px;
+  border-style: solid;
+  border-width: 2px;
+  border-color: ${({ theme }) => theme.colors.primary};
+  background-color: #ffffff;
+  color: ${({ theme }) => theme.colors.primary};
+  font-size: ${({ theme }) => theme.fontSize.input};
+  font-weight: 500;
+  border-radius: 6px;
+  box-shadow: 0px 0px 5px rgba(66, 66, 66, 0.75);
+  outline: none;
+  &:hover {
+    outline: none;
+  }
+  &:focus {
+  }
+
+  &::placeholder {
+    font-size: ${({ theme }) => theme.fontSize.input};
+    font-weight: 500;
+    opacity: 0.7;
+  }
 `;

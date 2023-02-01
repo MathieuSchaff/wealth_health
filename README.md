@@ -1,46 +1,111 @@
-# Getting Started with Create React App
+# React Date Picker from Scratch
 
-This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).
+[React Date Picker W](http://react-day-picker.js.org/) is a date picker component for [React](https://reactjs.org/). Renders an input and a calendar. This components is customizable, easy to use and can be styled to match any design.
 
-## Available Scripts
+## Main features
 
-In the project directory, you can run:
+- ☀️ Select a day
+- 🧘‍♀️ using [date-fns](http://date-fns.org/) as date library
+- 🌎 Localizable into any language
+- ➡️ Keyboard navigation for certain part of the component
+- 🤖 Written in TypeScript
+- :police_car: Easy to style and customize
+- 📄 Easy to integrate
 
-### `npm start`
+## Installation
 
-Runs the app in the development mode.\
-Open [http://localhost:3000](http://localhost:3000) to view it in the browser.
+npm install react-day-picker date-fns # using npm
+pnpm install react-day-picker date-fns # using pnpm
+yarn add react-day-picker date-fns # using yarn
 
-The page will reload if you make edits.\
-You will also see any lint errors in the console.
+## Example
 
-### `npm test`
+```javascript
+import React from 'react';
+import { format } from 'date-fns';
+import { DayPicker } from 'react-day-picker';
+import 'react-day-picker/dist/style.css';
+export default function Form() {
+	const [selected, setSelected] = React.useState<Date>();
+    return (
+        <DatePicker
+        id="dateOfBirth"
+        value={selectedDate}
+        onChange={setSelectedDate}
+        formatDate={FORMAT_OF_DATE}
+        maxDate={new Date(2027, 2, 22)}
+        name="myBeautifulDatePicker"
+        ariaRequired={true}
+        iso={true}
+        />);
+        }
+```
 
-Launches the test runner in the interactive watch mode.\
-See the section about [running tests](https://facebook.github.io/create-react-app/docs/running-tests) for more information.
+|  Prop name   |             Type             |                     Description                     | Default value/optionnal |     Example values     | required |
+| :----------: | :--------------------------: | :-------------------------------------------------: | :---------------------: | :--------------------: | :------: |
+|      id      |            string            |                 the id of the input                 |          none           |   "datepicker-input    |   true   |
+|    value     |             Date             |                the value of the date                |          none           |       new Date()       |   true   |
+|   onChange   | <React.SetStateAction<Date>> | The setter of the date inside the higher component  |          none           |    setSelectedDate     |   true   |
+|   minDate    |             Date             |                    The min date                     |        optionnal        | new Date(2012, 9, 10)  |  false   |
+|   maxDate    |             Date             |                    The max date                     |        optionnal        | new Date(2022, 10, 10) |  false   |
+| placeholder  |            string            |     the placerholder of the input text element      |        optionnal        |      "2010-4-22"       |  false   |
+|  formatDate  |            string            | the format of the date to be formated with date fns |      "yyyy-MM-dd"       |      "yyyy-L-dd"       |   true   |
+|     name     |            string            |                    name of input                    |          none           |    "date of birth"     |   true   |
+| ariaRequired |           boolean            |               is this input required                |        optionnal        |       false/true       |  false   |
+|     iso      |           boolean            |        local date begin on sunday or monday?        |        optionnal        |       false/true       |  false   |
+|  formatDay   |            string            |             the format of the day input             |          Text           |        And more        |  false   |
+| formatMonth  |            string            |              the format of the months               |          "LLL"          |         "LLL"          |  false   |
+|  formatYear  |            string            |               the format of the years               |         "yyyy"          |         "yyyy"         |  false   |
+|  ariaLabels  |          AriaLabels          |           the aria labels to be displayed           |        see below        |       see below        |  false   |
+|    styles    |           IStyles            |              the styles to be applied               |        see below        |       see below        |  false   |
+|  withPrefix  |           boolean            |       display the prefix days in the calendar       |          true           |          true          |  false   |
+|  withSuffix  |           boolean            |       display the suffix days in the calendar       |          true           |          true          |  false   |
 
-### `npm run build`
+## i18n
 
-Builds the app for production to the `build` folder.\
-It correctly bundles React in production mode and optimizes the build for the best performance.
+Different language and date formats are supported by react-datetime. React uses [date-fns](http://date-fns.org/) to format the dates, and the easiest way of changing the language of the calendar is [changing the date fns locale]
 
-The build is minified and the filenames include the hashes.\
-Your app is ready to be deployed!
+Don't forget to import your locale file from the date fns library `date-fns/locale` folder.
 
-See the section about [deployment](https://facebook.github.io/create-react-app/docs/deployment) for more information.
+```javascript
+import { setDefaultOptions } from "date-fns";
+import { fr, enUS } from "date-fns/locale";
+//On top of the file set the locale option like this:
+setDefaultOptions({ locale: fr });
+```
 
-### `npm run eject`
+Now react-datetime will be in french
 
-**Note: this is a one-way operation. Once you `eject`, you can’t go back!**
+## Customize the Appearance
 
-If you aren’t satisfied with the build tool and configuration choices, you can `eject` at any time. This command will remove the single build dependency from your project.
+There is two ways to style elements in the calendar.
 
-Instead, it will copy all the configuration files and the transitive dependencies (webpack, Babel, ESLint, etc) right into your project so you have full control over them. All of the commands except `eject` will still work, but they will point to the copied scripts so you can tweak them. At this point you’re on your own.
+The first way is by playing with the classes.
+The second way is by providing the DatePicker component an object called styles.
 
-You don’t have to ever use `eject`. The curated feature set is suitable for small and middle deployments, and you shouldn’t feel obligated to use this feature. However we understand that this tool wouldn’t be useful if you couldn’t customize it when you are ready for it.
+I) Classes.
 
-## Learn More
+to customize the color, you set two keys inside the styles object:
+primarycolor and secondarycolor
 
-You can learn more in the [Create React App documentation](https://facebook.github.io/create-react-app/docs/getting-started).
+```typescript
+const styles: IStyles = {
+  primarycolor: "#54a0ff",
+  secondarycolor: "#DB5461",
+  inputStyles: {},
+  arrowButton: {
+    size: "3rem",
+  },
+};
+```
 
-To learn React, check out the [React documentation](https://reactjs.org/).
+If you want to style the arrow buttons to go to the next or previous year/month you can set the key size like above.
+Other keys:
+
+1. inputStyles: style the main inpux text that is displaying the date in a text format
+2. arrowButton: will style the button that look like arrows in the calendar.
+3. customSelect: will style the button "Month" and "Year"
+4. inputStyles
+5. inputStyles
+6. inputStyles
+7. inputStyles

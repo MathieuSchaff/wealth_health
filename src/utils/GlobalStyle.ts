@@ -13,8 +13,11 @@ html {
   }
   @media (min-width: 1800px) {
     // width > 1800 ?
-    font-size: 75%; // 1rem = 12px; 12/16 = 75%
+    font-size: 65%; // 1rem = 12px; 12/16 = 75%
   }
+}
+input {
+  font-size: 1.8rem!important;
 }
 body {
   font-family: Oswald, sans-serif;

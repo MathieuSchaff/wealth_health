@@ -1,6 +1,4 @@
 import React, { useMemo } from "react";
-import { useUsersStore } from "../../store/zustandStore";
-// import type { FormSchema } from "../components/ZodForm/ZodForm";
 import HeaderCell from "./HeaderCell";
 import {
   useReactTable,
@@ -35,6 +33,9 @@ import {
 } from "./styledTable";
 import type { FormatedDataType } from "./fakeData";
 import { defaultData } from "./fakeData";
+
+import { useAppSelector } from "../../store/hooks";
+import { selectAllUsers } from "../../features/usersSlice";
 declare module "@tanstack/table-core" {
   interface FilterFns {
     fuzzy: FilterFn<unknown>;
@@ -57,51 +58,6 @@ const fuzzyFilter: FilterFn<any> = (row, columnId, value, addMeta) => {
 };
 
 const UsersTable = () => {
-  // const columns = useMemo<ColumnDef<FormatedDataType, any>[]>(
-  //   () => [
-  //     columnHelper.accessor("firstName", {
-  //       id: "firstName",
-  //       cell: (info) => info.getValue(),
-  //       header: () => <span>First Name</span>,
-  //     }),
-  //     // Accessor Column
-  //     columnHelper.accessor((row) => row.lastName, {
-  //       id: "lastName",
-  //       cell: (info) => info.getValue(),
-  //       header: () => <span>Last Name</span>,
-  //     }),
-
-  //     columnHelper.accessor("city", {
-  //       header: () => <span>city</span>,
-  //       cell: (info) => info.getValue(),
-  //     }),
-  //     columnHelper.accessor("dateOfBirth", {
-  //       header: () => <span>dateOfBirth</span>,
-  //       cell: (info) => info.getValue(),
-  //     }),
-  //     columnHelper.accessor("department", {
-  //       header: () => <span>department</span>,
-  //       cell: (info) => info.getValue(),
-  //     }),
-  //     columnHelper.accessor("startDate", {
-  //       header: () => <span>startDate</span>,
-  //       cell: (info) => info.getValue(),
-  //     }),
-  //     columnHelper.accessor("state", {
-  //       header: () => <span>state</span>,
-  //       cell: (info) => info.getValue(),
-  //     }),
-  //     columnHelper.accessor("street", {
-  //       header: () => <span>street</span>,
-  //       cell: (info) => info.getValue(),
-  //     }),
-  //     columnHelper.accessor("zipCode", {
-  //       header: () => <span>zipCode</span>,
-  //       cell: (info) => info.getValue(),
-  //     }),
-  //   ],
-  //   []
-  // );
   const columns = useMemo<ColumnDef<FormatedDataType, any>[]>(
     () => [
       {
@@ -147,12 +103,9 @@ const UsersTable = () => {
     ],
     []
   );
-  // const users = useUsersStore((state) => state.users);
-  // const [data, setData] = React.useState(() => [...defaultData]);
-  const users = useUsersStore((state) => state.users);
+  const users = useAppSelector(selectAllUsers);
   const [sorting, setSorting] = React.useState<SortingState>([]);
   const [globalFilter, setGlobalFilter] = React.useState("");
-
   const [{ pageIndex, pageSize }, setPagination] =
     React.useState<PaginationState>({
       pageIndex: 0,
@@ -190,10 +143,10 @@ const UsersTable = () => {
     enableMultiSort: true,
     debugTable: true,
   });
-  console.log(
-    "table.getState().pagination.pageSize",
-    table.getState().pagination.pageSize
-  );
+  // console.log(
+  //   "table.getState().pagination.pageSize",
+  //   table.getState().pagination.pageSize
+  // );
   return (
     <SContainerPageTable>
       <SInputGlobalFilter

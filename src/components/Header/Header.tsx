@@ -60,6 +60,7 @@ const Header = ({
       <SHeaderH1>
         <Link to="/">
           <SHeaderIcons $homepage={homepage} />
+          {""}
         </Link>
         <SHPContainer>
           <SHeaderP>

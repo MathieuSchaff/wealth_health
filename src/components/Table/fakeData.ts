@@ -9,6 +9,7 @@ export type FormatedDataType = {
   zipCode: number;
   department: string;
 };
+
 export const defaultData: FormatedDataType[] = [
   {
     firstName: "tanner",
