@@ -47,7 +47,12 @@ const BasicLabel = styled.label`
   font-weight: bold;
   margin-bottom: 0.4rem;
 `;
+export const StyledDivTest = styled.div`
+  display: flex;
+  flex-direction: column;
+`;
 export const LabelTop = styled(BasicLabel)`
+  justify-self: flex-start;
   color: ${({ theme }) => theme.colors.white};
 `;
 export const LabelFieldSet = styled(BasicLabel)`

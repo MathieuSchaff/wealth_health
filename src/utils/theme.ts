@@ -9,7 +9,7 @@ export const theme = {
     dimGray: "#686963",
     backgroundLight: "#c8d6e5",
     white: "#EBF5EE",
-    errorColor: "#F5F749",
+    errorColor: "red",
     fontColor: "#332C23",
   },
   fontSize: {

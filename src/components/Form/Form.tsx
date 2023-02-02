@@ -10,8 +10,10 @@ import {
   LabelTop,
   StyledSelect,
   StyledErrorMessage,
+  StyledDivTest,
 } from "./form.styled";
 import { useState } from "react";
+import type { IStyles } from "react-datepicker-ms";
 import { DatePicker } from "react-datepicker-ms";
 import { format } from "date-fns";
 import { addUser } from "../../features/usersSlice";
@@ -31,15 +33,9 @@ const ariaLabels = {
 };
 
 export const FORMAT_OF_DATE = "yyyy-MM-dd";
-const styles: any = {
+const styles: IStyles = {
   primarycolor: "#54a0ff",
   secondarycolor: "#DB5461",
-  inputStyles: {},
-  // headerStyles: {
-  //   arrowButton: {
-  //     size: "3rem",
-  //   },
-  // },
 };
 const options = [
   { value: "Sales", label: "Sales" },
@@ -75,6 +71,17 @@ const Form = ({ onsubmit }: { onsubmit?: () => void }) => {
   });
   return (
     <>
+      <DatePicker
+        id="toto"
+        value={selectedDate}
+        onChange={setSelectedDate}
+        ariaLabels={ariaLabels}
+        styles={styles}
+        formatDate={FORMAT_OF_DATE}
+        name={"toto"}
+        ariaRequired={true}
+        iso={true}
+      />
       <FormStyled
         action="#"
         ref={zo.ref}
@@ -94,7 +101,6 @@ const Form = ({ onsubmit }: { onsubmit?: () => void }) => {
             aria-required="true"
           />
         </LabelTop>
-
         {zo.errors.firstName((e) => (
           <ErrorMessage message={e.message} role="alert" />
         ))}
@@ -113,8 +119,8 @@ const Form = ({ onsubmit }: { onsubmit?: () => void }) => {
         {zo.errors.lastName((e) => (
           <ErrorMessage message={e.message} role="alert" />
         ))}
-        <LabelTop htmlFor="dateOfBirth">
-          Date of birth
+        <StyledDivTest>
+          <LabelTop htmlFor="dateOfBirth">Date of birth</LabelTop>
           <DatePicker
             id="dateOfBirth"
             value={selectedDate}
@@ -126,13 +132,13 @@ const Form = ({ onsubmit }: { onsubmit?: () => void }) => {
             ariaRequired={true}
             iso={true}
           />
-        </LabelTop>
 
-        {zo.errors.dateOfBirth((e) => (
-          <ErrorMessage message={e.message} role="alert" />
-        ))}
-        <LabelTop htmlFor="startDate">
-          Start Date
+          {zo.errors.dateOfBirth((e) => (
+            <ErrorMessage message={e.message} role="alert" />
+          ))}
+        </StyledDivTest>
+        <StyledDivTest>
+          <LabelTop htmlFor="startDate">Start Date</LabelTop>
           <DatePicker
             id="startDate"
             value={selectedDate}
@@ -145,11 +151,11 @@ const Form = ({ onsubmit }: { onsubmit?: () => void }) => {
             ariaRequired={true}
             iso={true}
           />
-        </LabelTop>
+          {zo.errors.startDate((e) => (
+            <ErrorMessage message={e.message} role="alert" />
+          ))}
+        </StyledDivTest>
 
-        {zo.errors.startDate((e) => (
-          <ErrorMessage message={e.message} role="alert" />
-        ))}
         <FieldSetForm className="address">
           <LegendFormAdress>Address</LegendFormAdress>
 
