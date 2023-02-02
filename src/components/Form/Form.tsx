@@ -36,6 +36,9 @@ export const FORMAT_OF_DATE = "yyyy-MM-dd";
 const styles: IStyles = {
   primarycolor: "#54a0ff",
   secondarycolor: "#DB5461",
+  headerStyles: {
+    arrowButtonSize: "3rem",
+  },
 };
 const options = [
   { value: "Sales", label: "Sales" },
