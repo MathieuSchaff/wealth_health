@@ -33,7 +33,7 @@
     "@types/react-dom": "^18.0.9",
     "date-fns": "^2.29.3",
     "react": "^18.2.0",
-    "react-datepicker-ms": "^1.6.0",
+    "react-datepicker-ms": "^1.7.0",
     "react-dom": "^18.2.0",
     "react-icons": "^4.7.1",
     "react-redux": "^8.0.5",
