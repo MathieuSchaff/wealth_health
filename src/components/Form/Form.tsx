@@ -17,6 +17,7 @@ import { format } from "date-fns";
 import { addUser } from "../../features/usersSlice";
 import { useAppDispatch } from "../../store/hooks";
 import { FormSchemaType, FormSchema } from "./FormSchema";
+import Modal from "../Modal/Modal";
 const ariaLabels = {
   input: "date of birth of the user",
   ariaArrow: {
@@ -34,11 +35,11 @@ const styles: any = {
   primarycolor: "#54a0ff",
   secondarycolor: "#DB5461",
   inputStyles: {},
-  headerStyles: {
-    arrowButton: {
-      size: "3rem",
-    },
-  },
+  // headerStyles: {
+  //   arrowButton: {
+  //     size: "3rem",
+  //   },
+  // },
 };
 const options = [
   { value: "Sales", label: "Sales" },
@@ -56,6 +57,7 @@ export interface FormProps {
 }
 const Form = ({ onsubmit }: { onsubmit?: () => void }) => {
   const [selectedDate, setSelectedDate] = useState<Date>(new Date());
+  const [openModal, setOpenModal] = useState<boolean>(false);
   const dispatch = useAppDispatch();
   const zo = useZorm("signup", FormSchema, {
     async onValidSubmit(e) {
@@ -68,165 +70,172 @@ const Form = ({ onsubmit }: { onsubmit?: () => void }) => {
         startDate,
       };
       dispatch(addUser(newUser));
+      setOpenModal(true);
     },
   });
   return (
-    <FormStyled
-      action="#"
-      ref={zo.ref}
-      role="form"
-      name="form_user"
-      aria-label="Add a user to the company"
-    >
-      <TitleForm>Create Employee</TitleForm>
-      <LabelTop htmlFor="firstName">
-        First Name
-        <InputForm
-          type="text"
-          name={zo.fields.firstName()}
-          id="firstName"
-          aria-label="first name of the user"
-          placeholder="John"
-          aria-required="true"
-        />
-      </LabelTop>
-
-      {zo.errors.firstName((e) => (
-        <ErrorMessage message={e.message} role="alert" />
-      ))}
-      <LabelTop htmlFor="lastName">
-        Last Name
-        <InputForm
-          type="text"
-          name={zo.fields.lastName()}
-          id="lastName"
-          aria-label="last name of the user"
-          placeholder="Wick"
-          aria-required="true"
-        />
-      </LabelTop>
-
-      {zo.errors.lastName((e) => (
-        <ErrorMessage message={e.message} role="alert" />
-      ))}
-      <LabelTop htmlFor="dateOfBirth">
-        Date of birth
-        <DatePicker
-          id="dateOfBirth"
-          value={selectedDate}
-          onChange={setSelectedDate}
-          ariaLabels={ariaLabels}
-          styles={styles}
-          formatDate={FORMAT_OF_DATE}
-          name={zo.fields.dateOfBirth()}
-          ariaRequired={true}
-          iso={true}
-        />
-      </LabelTop>
-
-      {zo.errors.dateOfBirth((e) => (
-        <ErrorMessage message={e.message} role="alert" />
-      ))}
-      <LabelTop htmlFor="startDate">
-        Start Date
-        <DatePicker
-          id="startDate"
-          value={selectedDate}
-          onChange={setSelectedDate}
-          ariaLabels={ariaLabels}
-          styles={styles}
-          maxDate={new Date(2027, 2, 22)}
-          formatDate={FORMAT_OF_DATE}
-          name={zo.fields.startDate()}
-          ariaRequired={true}
-          iso={true}
-        />
-      </LabelTop>
-
-      {zo.errors.startDate((e) => (
-        <ErrorMessage message={e.message} role="alert" />
-      ))}
-      <FieldSetForm className="address">
-        <LegendFormAdress>Address</LegendFormAdress>
-
-        <LabelFieldSet htmlFor="street">
-          Street
+    <>
+      <FormStyled
+        action="#"
+        ref={zo.ref}
+        role="form"
+        name="form_user"
+        aria-label="Add a user to the company"
+      >
+        <TitleForm>Create Employee</TitleForm>
+        <LabelTop htmlFor="firstName">
+          First Name
           <InputForm
-            name={zo.fields.street()}
             type="text"
-            id="street"
-            placeholder="obama street"
+            name={zo.fields.firstName()}
+            id="firstName"
+            aria-label="first name of the user"
+            placeholder="John"
             aria-required="true"
           />
-        </LabelFieldSet>
+        </LabelTop>
 
-        {zo.errors.street((e) => (
+        {zo.errors.firstName((e) => (
           <ErrorMessage message={e.message} role="alert" />
         ))}
-        <LabelFieldSet htmlFor="city">
-          City
+        <LabelTop htmlFor="lastName">
+          Last Name
           <InputForm
-            name={zo.fields.city()}
             type="text"
-            id="city"
-            placeholder="Los angeles"
+            name={zo.fields.lastName()}
+            id="lastName"
+            aria-label="last name of the user"
+            placeholder="Wick"
             aria-required="true"
           />
-        </LabelFieldSet>
+        </LabelTop>
 
-        {zo.errors.city((e) => (
+        {zo.errors.lastName((e) => (
           <ErrorMessage message={e.message} role="alert" />
         ))}
-        <LabelFieldSet htmlFor="state">
-          State
-          <StyledSelect
-            inputId="state"
-            placeholder="Select your state"
-            classNamePrefix="react-select"
-            name={zo.fields.state()}
-            options={options}
-            aria-required="true"
+        <LabelTop htmlFor="dateOfBirth">
+          Date of birth
+          <DatePicker
+            id="dateOfBirth"
+            value={selectedDate}
+            onChange={setSelectedDate}
+            ariaLabels={ariaLabels}
+            styles={styles}
+            formatDate={FORMAT_OF_DATE}
+            name={zo.fields.dateOfBirth()}
+            ariaRequired={true}
+            iso={true}
           />
-        </LabelFieldSet>
+        </LabelTop>
 
-        {zo.errors.state((e) => (
+        {zo.errors.dateOfBirth((e) => (
           <ErrorMessage message={e.message} role="alert" />
         ))}
-
-        <LabelFieldSet htmlFor="zipCode">
-          Zip Code
-          <InputForm
-            id="zipCode"
-            name={zo.fields.zipCode()}
-            type="number"
-            aria-required="true"
-            placeholder="00112233"
+        <LabelTop htmlFor="startDate">
+          Start Date
+          <DatePicker
+            id="startDate"
+            value={selectedDate}
+            onChange={setSelectedDate}
+            ariaLabels={ariaLabels}
+            styles={styles}
+            maxDate={new Date(2027, 2, 22)}
+            formatDate={FORMAT_OF_DATE}
+            name={zo.fields.startDate()}
+            ariaRequired={true}
+            iso={true}
           />
-        </LabelFieldSet>
+        </LabelTop>
 
-        {zo.errors.state((e) => (
+        {zo.errors.startDate((e) => (
           <ErrorMessage message={e.message} role="alert" />
         ))}
-        <LabelFieldSet htmlFor="department">
-          Department
-          <StyledSelect
-            inputId="department"
-            name={zo.fields.department()}
-            placeholder="Department"
-            classNamePrefix="react-select"
-            options={options}
-            menuPlacement={"auto"}
-            aria-required="true"
-          />
-        </LabelFieldSet>
+        <FieldSetForm className="address">
+          <LegendFormAdress>Address</LegendFormAdress>
 
-        {zo.errors.department((e) => (
-          <ErrorMessage message={e.message} role="alert" />
-        ))}
-      </FieldSetForm>
+          <LabelFieldSet htmlFor="street">
+            Street
+            <InputForm
+              name={zo.fields.street()}
+              type="text"
+              id="street"
+              placeholder="obama street"
+              aria-required="true"
+            />
+          </LabelFieldSet>
 
-      <ButtonSubmit type="submit">Submit</ButtonSubmit>
-    </FormStyled>
+          {zo.errors.street((e) => (
+            <ErrorMessage message={e.message} role="alert" />
+          ))}
+          <LabelFieldSet htmlFor="city">
+            City
+            <InputForm
+              name={zo.fields.city()}
+              type="text"
+              id="city"
+              placeholder="Los angeles"
+              aria-required="true"
+            />
+          </LabelFieldSet>
+
+          {zo.errors.city((e) => (
+            <ErrorMessage message={e.message} role="alert" />
+          ))}
+          <LabelFieldSet htmlFor="state">
+            State
+            <StyledSelect
+              inputId="state"
+              placeholder="Select your state"
+              classNamePrefix="react-select"
+              name={zo.fields.state()}
+              options={options}
+              aria-required="true"
+            />
+          </LabelFieldSet>
+
+          {zo.errors.state((e) => (
+            <ErrorMessage message={e.message} role="alert" />
+          ))}
+
+          <LabelFieldSet htmlFor="zipCode">
+            Zip Code
+            <InputForm
+              id="zipCode"
+              name={zo.fields.zipCode()}
+              type="number"
+              aria-required="true"
+              placeholder="00112233"
+            />
+          </LabelFieldSet>
+
+          {zo.errors.state((e) => (
+            <ErrorMessage message={e.message} role="alert" />
+          ))}
+          <LabelFieldSet htmlFor="department">
+            Department
+            <StyledSelect
+              inputId="department"
+              name={zo.fields.department()}
+              placeholder="Department"
+              classNamePrefix="react-select"
+              options={options}
+              menuPlacement={"auto"}
+              aria-required="true"
+            />
+          </LabelFieldSet>
+
+          {zo.errors.department((e) => (
+            <ErrorMessage message={e.message} role="alert" />
+          ))}
+        </FieldSetForm>
+
+        <ButtonSubmit type="submit">Submit</ButtonSubmit>
+      </FormStyled>
+      {openModal && (
+        <Modal onClose={() => setOpenModal(false)} />
+        // <div>toto</div>
+      )}
+    </>
   );
 };
 
