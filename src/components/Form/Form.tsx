@@ -71,17 +71,6 @@ const Form = ({ onsubmit }: { onsubmit?: () => void }) => {
   });
   return (
     <>
-      <DatePicker
-        id="toto"
-        value={selectedDate}
-        onChange={setSelectedDate}
-        ariaLabels={ariaLabels}
-        styles={styles}
-        formatDate={FORMAT_OF_DATE}
-        name={"toto"}
-        ariaRequired={true}
-        iso={true}
-      />
       <FormStyled
         action="#"
         ref={zo.ref}
