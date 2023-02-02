@@ -10,6 +10,9 @@ const SHome = styled.main`
     align-items: flex-start;
     justify-content: space-between;
   }
+  @media (min-width: 1400px) {
+    justify-content: space-around;
+  }
 `;
 
 const Home = () => {
