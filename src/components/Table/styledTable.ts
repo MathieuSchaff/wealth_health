@@ -16,18 +16,15 @@ export const StyledArrowHeaderUp = styled(BsFileArrowUpFill)<{
   margin-top: 1rem;
 `;
 export const SContainerPageTable = styled.div`
-  /* display: flex;
-  flex-direction: column;
-  align-items: center; */
   display: flex;
   flex-direction: column;
 `;
 export const DivContainerTable = styled.div`
   overflow: auto;
   margin: 0 0;
-  @media (min-width: 1378px) {
+  /* @media (min-width: 1378px) {
     margin: 0 auto;
-  }
+  } */
   ::-webkit-scrollbar {
     width: 5px;
   }
@@ -73,15 +70,18 @@ export const SInputGlobalFilter = styled.input`
 
   @media (min-width: 1378px) {
     margin: 2rem auto;
+    width: 100%;
   }
 `;
 export const STable = styled.table<{ stripe: boolean }>`
-  width: 100%;
   border-collapse: collapse;
   border-radius: 10px;
-
+  width: 100%;
   text-align: center;
   overflow: hidden;
+  @media (min-width: 1200px) {
+    width: 100% !important;
+  }
   ${(props) =>
     props.stripe &&
     css`
