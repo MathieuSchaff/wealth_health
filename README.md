@@ -19,7 +19,7 @@ The company wanted me to transform a jquery plugin into a react library.
 They used a jquery date picker time to handle the dates.
 They were using this: [jquery datepicker plugin](https://github.com/xdan/datetimepicker).
 
-And I chand it into this: [react-datepicker-ms](https://www.npmjs.com/package/react-datepicker-ms)
+And I changed it into this: [react-datepicker-ms](https://www.npmjs.com/package/react-datepicker-ms)
 
 You can also check the github repository( with non minified code) [here](https://github.com/MathieuSchaff/datepicker-ms)
 

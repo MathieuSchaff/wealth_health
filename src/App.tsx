@@ -5,7 +5,9 @@ import styled from "styled-components";
 import { GlobalStyle } from "./utils/GlobalStyle";
 import { ThemeProvider } from "styled-components";
 import { theme } from "./utils/theme";
-
+import { lazy, Suspense } from "react";
+import { Spinner } from "./components/Spinner/Spinner";
+const LazyUsers = lazy(() => import("./pages/Users/Users"));
 const SApp = styled.div`
   max-width: 100vw;
   overflow: hidden;
@@ -21,6 +23,14 @@ function App() {
         <Routes>
           <Route path="/" element={<Home />} />
           <Route path="users" element={<Users />} />
+          <Route
+            path="users"
+            element={
+              <Suspense fallback={<Spinner />}>
+                <LazyUsers />
+              </Suspense>
+            }
+          />
         </Routes>
       </SApp>
     </ThemeProvider>
