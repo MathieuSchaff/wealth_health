@@ -32,7 +32,6 @@ import {
   STHeadTR,
 } from "./styledTable";
 import type { FormatedDataType } from "./fakeData";
-import { defaultData } from "./fakeData";
 
 import { useAppSelector } from "../../store/hooks";
 import { selectAllUsers } from "../../features/usersSlice";
@@ -143,10 +142,7 @@ const UsersTable = () => {
     enableMultiSort: true,
     debugTable: true,
   });
-  // console.log(
-  //   "table.getState().pagination.pageSize",
-  //   table.getState().pagination.pageSize
-  // );
+
   return (
     <SContainerPageTable>
       <SInputGlobalFilter

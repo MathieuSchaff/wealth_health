@@ -14,8 +14,8 @@ import {
 import { useState } from "react";
 import { DatePicker } from "react-datepicker-ms";
 import { format } from "date-fns";
-import { addUser, selectAllUsers } from "../../features/usersSlice";
-import { useAppDispatch, useAppSelector } from "../../store/hooks";
+import { addUser } from "../../features/usersSlice";
+import { useAppDispatch } from "../../store/hooks";
 import { FormSchemaType, FormSchema } from "./FormSchema";
 const ariaLabels = {
   input: "date of birth of the user",
@@ -56,9 +56,7 @@ export interface FormProps {
 }
 const Form = ({ onsubmit }: { onsubmit?: () => void }) => {
   const [selectedDate, setSelectedDate] = useState<Date>(new Date());
-  const users = useAppSelector(selectAllUsers);
   const dispatch = useAppDispatch();
-  console.log("user", users);
   const zo = useZorm("signup", FormSchema, {
     async onValidSubmit(e) {
       e.preventDefault();
@@ -69,8 +67,6 @@ const Form = ({ onsubmit }: { onsubmit?: () => void }) => {
         dateOfBirth,
         startDate,
       };
-      console.log("e.date", e.data);
-
       dispatch(addUser(newUser));
     },
   });

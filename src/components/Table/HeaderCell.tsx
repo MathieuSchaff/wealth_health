@@ -1,7 +1,6 @@
 import { flexRender, Header } from "@tanstack/react-table";
 import {
   SButtonHeaderContainer,
-  SHeaderButton,
   SHeaderContainer,
   STH,
   StyledArrowHeaderDown,
@@ -14,15 +13,7 @@ const HeaderCell = ({
   header: Header<FormatedDataType, unknown>;
 }) => {
   const isSortable = header.column.getCanSort();
-  //   if (isSortable) {
-  //   console.log("isSorted", header.column.getIsSorted());
-  console.log(
-    {
-      asc: " 🔼",
-      desc: " 🔽",
-    }[header.column.getIsSorted() as string]
-  );
-  //   }
+
   const ascOrDesc = {
     asc: " 🔼",
     desc: " 🔽",
