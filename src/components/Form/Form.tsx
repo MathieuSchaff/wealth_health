@@ -20,6 +20,7 @@ import { addUser } from "../../features/usersSlice";
 import { useAppDispatch } from "../../store/hooks";
 import { FormSchemaType, FormSchema } from "./FormSchema";
 import Modal from "../Modal/Modal";
+import { departmentoptions, statesOptions } from "./options";
 const ariaLabels = {
   input: "date of birth of the user",
   ariaArrow: {
@@ -40,13 +41,7 @@ const styles: IStyles = {
     arrowButtonSize: "3rem",
   },
 };
-const options = [
-  { value: "Sales", label: "Sales" },
-  { value: "Marketing", label: "Marketing" },
-  { value: "Engineering", label: "Engineering" },
-  { value: "Human Resources", label: "Human Resources" },
-  { value: "Legal", label: "Legal" },
-];
+
 function ErrorMessage(props: { message: string; role: string }) {
   return <StyledErrorMessage>{props.message}</StyledErrorMessage>;
 }
@@ -186,7 +181,7 @@ const Form = ({ onsubmit }: { onsubmit?: () => void }) => {
               placeholder="Select your state"
               classNamePrefix="react-select"
               name={zo.fields.state()}
-              options={options}
+              options={statesOptions}
               aria-required="true"
             />
           </LabelFieldSet>
@@ -216,7 +211,7 @@ const Form = ({ onsubmit }: { onsubmit?: () => void }) => {
               name={zo.fields.department()}
               placeholder="Department"
               classNamePrefix="react-select"
-              options={options}
+              options={departmentoptions}
               menuPlacement={"auto"}
               aria-required="true"
             />
