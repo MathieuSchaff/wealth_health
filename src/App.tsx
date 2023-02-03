@@ -1,6 +1,5 @@
 import { Route, Routes } from "react-router-dom";
 import Home from "./pages/Home/Home";
-import Users from "./pages/Users/Users";
 import styled from "styled-components";
 import { GlobalStyle } from "./utils/GlobalStyle";
 import { ThemeProvider } from "styled-components";
@@ -22,7 +21,6 @@ function App() {
       <SApp className="App">
         <Routes>
           <Route path="/" element={<Home />} />
-          <Route path="users" element={<Users />} />
           <Route
             path="users"
             element={
